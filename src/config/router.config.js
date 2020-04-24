@@ -3,7 +3,6 @@ import { UserLayout, BasicLayout, RouteView, BlankLayout, PageView } from '@/lay
 import { bxAnaalyse } from '@/core/icons'
 
 export const asyncRouterMap = [
-
   {
     path: '/',
     name: 'index',
@@ -26,15 +25,15 @@ export const asyncRouterMap = [
             meta: { title: '项目基本信息', keepAlive: true, permission: [ 'dashboard' ] }
           },
           {
-            path: '/dashboard/pro-mess',
+            path: '/dashboard/pro-mess/:pageNo([1-9]\\d*)?',
             name: 'Message',
-            component: () => import('@/views/dashboard/Analysis'),
+            component: () => import('@/views/list/TableList1'),
             meta: { title: '项目信息', keepAlive: false, permission: [ 'dashboard' ] }
           },
           {
-            path: '/dashboard/pro-person',
+            path: '/dashboard/pro-person/:pageNo([1-9]\\d*)?',
             name: 'Person',
-            component: () => import('@/views/dashboard/Workplace'),
+            component: () => import('@/views/list/Person'),
             meta: { title: '项目人员', keepAlive: true, permission: [ 'dashboard' ] }
           }
         ]

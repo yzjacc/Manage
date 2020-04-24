@@ -1,6 +1,6 @@
 <template>
   <a-modal
-    title="新建规则"
+    title="新建项目"
     :width="640"
     :visible="visible"
     :confirmLoading="confirmLoading"
@@ -10,11 +10,24 @@
     <a-spin :spinning="confirmLoading">
       <a-form :form="form">
         <a-form-item
-          label="描述"
+          label="项目信息输入"
           :labelCol="labelCol"
           :wrapperCol="wrapperCol"
         >
-          <a-input v-decorator="['desc', {rules: [{required: true, min: 5, message: '请输入至少五个字符的规则描述！'}]}]" />
+         <a-input placeholder="请输入项目名称"/>
+         <a-input placeholder="请输入项目编号"/>
+         <a-input placeholder="请输入项目管理员"/>
+         <a-input placeholder="请输入项目归属"/>
+         <a-select v-model="one" placeholder="请输入项目有无分包">
+            <a-select-option value="0">有</a-select-option>
+            <a-select-option value="1">无</a-select-option>
+          </a-select>
+          <a-select v-model="two" placeholder="请输入项目状态">
+            <a-select-option value="0">全部</a-select-option>
+            <a-select-option value="1">关闭</a-select-option>
+            <a-select-option value="2">运行中</a-select-option>
+          </a-select>
+          <a-date-picker style="width: 100%" placeholder="请输入上线日期"/>
         </a-form-item>
       </a-form>
     </a-spin>
