@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import { constantRouterMap } from '@/config/router.config'
-// import store from '../store/index'
 // eslint-disable-next-line
 var demo = localStorage.getItem('user') == 'true' ? true : false
 
@@ -23,7 +22,7 @@ var router = new Router({
 
 router.beforeEach((to, from, next) => {
   // var i = 0
-  if (to.path === '/dashboard/pro-basic' && demo) {
+  if (to.path === '/dashboard/pro-basic' && store.getters.id) {
     next('/dashboard/pro-mess')
     console.log(from.path)
   } else next()

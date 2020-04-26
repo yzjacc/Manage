@@ -69,11 +69,11 @@
 
       <a-form-item>
         <a-checkbox v-decorator="['rememberMe']">自动登录</a-checkbox>
-        <router-link
+        <!-- <router-link
           :to="{ name: 'register' }"
           class="forge-password"
           style="float: right;"
-        >注册账户</router-link>
+        >注册账户</router-link> -->
         <!-- <div class="user-login-other"> -->
         <!-- <router-link class="register" :to="{ name: 'register' }"></router-link> -->
         <!-- </div> -->
