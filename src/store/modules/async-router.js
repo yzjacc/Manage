@@ -7,7 +7,12 @@ import { generatorDynamicRouter } from '@/router/generator-routers'
 const permission = {
   state: {
     routers: constantRouterMap,
-    addRouters: []
+    addRouters: [{
+      path: '/dashboard/pro-basic',
+      name: 'Basic',
+      component: () => import('@/views/dashboard/Analysis'),
+      meta: { title: '项目基本信息', keepAlive: true, permission: [ 'dashboard' ] }
+    }]
   },
   mutations: {
     SET_ROUTERS: (state, routers) => {

@@ -16,6 +16,7 @@
     "ant-design-vue": "1.5.0-alpha.1",
     "axios": "^0.19.0",
     "core-js": "^3.1.2",
+    "echarts": "^4.7.0",
     "enquire.js": "^2.1.6",
     "lodash.get": "^4.4.2",
     "lodash.pick": "^4.4.0",
@@ -30,9 +31,9 @@
     "vue-ls": "^3.2.1",
     "vue-quill-editor": "^3.0.6",
     "vue-router": "^3.1.2",
+    "vue-svg-component-runtime": "^1.0.1",
     "vuex": "^3.1.1",
-    "wangeditor": "^3.1.1",
-    "vue-svg-component-runtime": "^1.0.1"
+    "wangeditor": "^3.1.1"
   },
   "devDependencies": {
     "@ant-design/colors": "^3.2.1",

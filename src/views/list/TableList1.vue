@@ -118,6 +118,8 @@ import { STable, Ellipsis } from '@/components'
 import StepByStepModal from './modules/StepByStepModal'
 import CreateForm from './modules/CreateForm'
 import { getRoleList, getServiceList } from '@/api/manage'
+import { mapGetters } from 'vuex'
+import store from '../../store/index'
 
 const statusMap = {
   0: {
@@ -145,6 +147,9 @@ export default {
     Ellipsis,
     CreateForm,
     StepByStepModal
+  },
+  computed: {
+    ...mapGetters(['id'])
   },
   data () {
     return {
@@ -197,7 +202,8 @@ export default {
       ],
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
-        console.log('loadData.parameter', parameter)
+        // console.log('loadData.parameter', parameter)
+        console.log(store)
         return getServiceList(Object.assign(parameter, this.queryParam))
           .then(res => {
             return res.result

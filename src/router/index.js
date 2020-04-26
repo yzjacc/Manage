@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import { constantRouterMap } from '@/config/router.config'
+import store from '../store/index'
 
 // hack router push callback
 const originalPush = Router.prototype.push
@@ -11,9 +12,18 @@ Router.prototype.push = function push (location, onResolve, onReject) {
 
 Vue.use(Router)
 
-export default new Router({
+var router = new Router({
   mode: 'history',
   base: process.env.BASE_URL,
   scrollBehavior: () => ({ y: 0 }),
   routes: constantRouterMap
 })
+
+router.beforeEach((to, from, next) => {
+  // var i = 0
+  if (to.path === '/dashboard/pro-basic' && store.getters.id) {
+    next('/dashboard/pro-mess')
+    console.log(from.path)
+  } else next()
+})
+export default router

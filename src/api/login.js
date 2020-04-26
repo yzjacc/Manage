@@ -8,6 +8,7 @@ import { axios } from '@/utils/request'
  *     password: '',
  *     remember_me: true,
  *     captcha: '12345'
+ *     id:true
  * }
  * @param parameter
  * @returns {*}

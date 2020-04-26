@@ -2,6 +2,7 @@ import Vue from 'vue'
 import { login, getInfo, logout } from '@/api/login'
 import { ACCESS_TOKEN } from '@/store/mutation-types'
 import { welcome } from '@/utils/util'
+// import { asyncRouterMap } from '@/config/router.config'
 
 const user = {
   state: {
@@ -10,7 +11,8 @@ const user = {
     welcome: '',
     avatar: '',
     roles: [],
-    info: {}
+    info: {},
+    id: true
   },
 
   mutations: {
@@ -29,6 +31,9 @@ const user = {
     },
     SET_INFO: (state, info) => {
       state.info = info
+    },
+    SET_ID: (state, id) => {
+      state.id = id
     }
   },
 
@@ -38,6 +43,7 @@ const user = {
       return new Promise((resolve, reject) => {
         login(userInfo).then(response => {
           const result = response.result
+          console.log(result)
           Vue.ls.set(ACCESS_TOKEN, result.token, 7 * 24 * 60 * 60 * 1000)
           commit('SET_TOKEN', result.token)
           resolve()
@@ -93,7 +99,18 @@ const user = {
         })
       })
     }
-
+    // GetId ({ commit }, data) {
+    //   return new Promise((resolve) => {
+    //     if (data) {
+    //       commit('SET_ID', asyncRoutes)
+    //     } else {
+    //       let menuRoutes
+    //       menuRoutes = menuFiltters(asyncRoutes, data)
+    //       commit("SET_ID", menuRoutes)
+    //     }
+    //     resolve()
+    //   })
+    // }
   }
 }
 

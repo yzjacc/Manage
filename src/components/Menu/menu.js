@@ -1,6 +1,6 @@
+import store from '../../store/index'
 import Menu from 'ant-design-vue/es/menu'
 import Icon from 'ant-design-vue/es/icon'
-
 const { Item, SubMenu } = Menu
 
 export default {
@@ -112,7 +112,9 @@ export default {
           item.meta = Object.assign(item.meta, { hidden: true })
         })
       }
-
+      if (menu.meta.title === '项目基本信息' && store.getters.id) {
+        return null
+      }
       return (
         <Item {...{ key: menu.path }}>
           <tag {...{ props, attrs }}>
