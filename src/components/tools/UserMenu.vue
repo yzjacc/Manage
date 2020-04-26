@@ -53,6 +53,7 @@ export default {
         content: '真的要注销登录吗 ?',
         onOk: () => {
           return this.Logout({}).then(() => {
+            localStorage.removeItem('user')
             setTimeout(() => {
               window.location.reload()
             }, 16)

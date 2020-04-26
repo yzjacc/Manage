@@ -2,6 +2,7 @@ import store from '../../store/index'
 import Menu from 'ant-design-vue/es/menu'
 import Icon from 'ant-design-vue/es/icon'
 const { Item, SubMenu } = Menu
+// eslint-disable-next-line
 
 export default {
   name: 'SMenu',

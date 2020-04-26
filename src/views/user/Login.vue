@@ -137,6 +137,8 @@ export default {
     ...mapActions(['Login', 'Logout']),
     // handler
     changeID (e) {
+      localStorage.removeItem('user')
+      localStorage.setItem('user', e)
       this.$store.commit('SET_ID', e)
     },
     handleUsernameOrEmail (rule, value, callback) {
@@ -169,11 +171,11 @@ export default {
 
       validateFields(validateFieldsKey, { force: true }, (err, values) => {
         if (!err) {
-          console.log('login form', values)
           const loginParams = { id, ...values }
           delete loginParams.username
           loginParams[!state.loginType ? 'email' : 'username'] = values.username
           loginParams.password = md5(values.password)
+          console.log('login form', loginParams)
           Login(loginParams)
             .then((res) => this.loginSuccess(res))
             .catch(err => this.requestFailed(err))

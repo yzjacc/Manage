@@ -2,7 +2,7 @@
   <a-config-provider :locale="locale">
     <div id="app">
       <RealTimeData></RealTimeData>
-      <a-row>
+      <a-row style="margin-left:15px">
         <!-- 左边-->
         <a-col :span="12" class="overflow">
           <a-layout>
@@ -59,7 +59,7 @@
         </a-col>
         <!-- 右边-->
         <a-col :span="12">
-          <a-layout>
+          <a-layout >
             <a-layout-header>
               <a-row type="flex" justify="space-between">
                 <a-col :span="6">
@@ -115,7 +115,7 @@ const option = {
     text: '昌平册数数据模块',
     subtext: '暂无数据：0(0%)',
     left: 'center',
-    top: 'center'
+    top: '0'
   },
   tooltip: {
     trigger: 'item',
@@ -199,6 +199,7 @@ export default {
 <style>
 #app {
   height: 100%;
+  min-width: 1000px;
   color: rgba(0, 0, 0, 0.85);
 }
 

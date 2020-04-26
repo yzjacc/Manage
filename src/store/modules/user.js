@@ -3,6 +3,8 @@ import { login, getInfo, logout } from '@/api/login'
 import { ACCESS_TOKEN } from '@/store/mutation-types'
 import { welcome } from '@/utils/util'
 // import { asyncRouterMap } from '@/config/router.config'
+// eslint-disable-next-line
+var demo = localStorage.getItem('user') == 'true' ? true : false
 
 const user = {
   state: {
@@ -12,7 +14,7 @@ const user = {
     avatar: '',
     roles: [],
     info: {},
-    id: true
+    id: demo
   },
 
   mutations: {

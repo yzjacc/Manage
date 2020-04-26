@@ -3,13 +3,23 @@
     <div class="table-page-search-wrapper">
       <a-form layout="inline">
         <a-row :gutter="48">
-          <a-col :md="8" :sm="24">
-            <a-form-item label="规则编号">
-              <a-input v-model="queryParam.id" placeholder=""/>
+           <a-col :md="8" :sm="24">
+            <a-form-item label="项目名称">
+              <a-input v-model="queryParam.name" placeholder="请输入项目名称"/>
             </a-form-item>
           </a-col>
           <a-col :md="8" :sm="24">
-            <a-form-item label="使用状态">
+            <a-form-item label="项目编号">
+              <a-input v-model="queryParam.id" placeholder="请输入项目编号"/>
+            </a-form-item>
+          </a-col>
+          <a-col :md="8" :sm="24">
+            <a-form-item label="项目管理员">
+              <a-input v-model="queryParam.manage" placeholder="请输入项目管理员"/>
+            </a-form-item>
+          </a-col>
+          <a-col :md="8" :sm="24">
+            <a-form-item label="项目状态">
               <a-select v-model="queryParam.status" placeholder="请选择" default-value="0">
                 <a-select-option value="0">全部</a-select-option>
                 <a-select-option value="1">关闭</a-select-option>
@@ -17,44 +27,22 @@
               </a-select>
             </a-form-item>
           </a-col>
-          <template v-if="advanced">
-            <a-col :md="8" :sm="24">
-              <a-form-item label="调用次数">
-                <a-input-number v-model="queryParam.callNo" style="width: 100%"/>
-              </a-form-item>
-            </a-col>
-            <a-col :md="8" :sm="24">
-              <a-form-item label="更新日期">
-                <a-date-picker v-model="queryParam.date" style="width: 100%" placeholder="请输入更新日期"/>
-              </a-form-item>
-            </a-col>
-            <a-col :md="8" :sm="24">
-              <a-form-item label="使用状态">
-                <a-select v-model="queryParam.useStatus" placeholder="请选择" default-value="0">
-                  <a-select-option value="0">全部</a-select-option>
-                  <a-select-option value="1">关闭</a-select-option>
-                  <a-select-option value="2">运行中</a-select-option>
-                </a-select>
-              </a-form-item>
-            </a-col>
-            <a-col :md="8" :sm="24">
-              <a-form-item label="使用状态">
-                <a-select placeholder="请选择" default-value="0">
-                  <a-select-option value="0">全部</a-select-option>
-                  <a-select-option value="1">关闭</a-select-option>
-                  <a-select-option value="2">运行中</a-select-option>
-                </a-select>
-              </a-form-item>
-            </a-col>
-          </template>
+          <a-col :md="8" :sm="24">
+            <a-form-item label="上线日期">
+              <a-date-picker v-model="queryParam.date" style="width: 100%" placeholder="请输入上线日期"/>
+            </a-form-item>
+          </a-col>
+          <!-- <template v-if="advanced">
+
+          </template> -->
           <a-col :md="!advanced && 8 || 24" :sm="24">
             <span class="table-page-search-submitButtons" :style="advanced && { float: 'right', overflow: 'hidden' } || {} ">
               <a-button type="primary" @click="$refs.table.refresh(true)">查询</a-button>
               <a-button style="margin-left: 8px" @click="() => queryParam = {}">重置</a-button>
-              <a @click="toggleAdvanced" style="margin-left: 8px">
+              <!-- <a @click="toggleAdvanced" style="margin-left: 8px">
                 {{ advanced ? '收起' : '展开' }}
                 <a-icon :type="advanced ? 'up' : 'down'"/>
-              </a>
+              </a> -->
             </span>
           </a-col>
         </a-row>
@@ -62,7 +50,8 @@
     </div>
 
     <div class="table-operator">
-      <a-button type="primary" icon="plus" @click="$refs.createModal.add()">新建</a-button>
+      <a-button type="primary" icon="plus" @click="$refs.createModal.add()">添加项目</a-button>&nbsp;&nbsp;
+      <a-button type="primary" icon="backlog" @click="$refs.createModal.add()">待办项目</a-button>&nbsp;
       <a-button type="dashed" @click="tableOption">{{ optionAlertShow && '关闭' || '开启' }} alert</a-button>
       <a-dropdown v-action:edit v-if="selectedRowKeys.length > 0">
         <a-menu slot="overlay">
@@ -98,9 +87,7 @@
 
       <span slot="action" slot-scope="text, record">
         <template>
-          <a @click="handleEdit(record)">配置</a>
-          <a-divider type="vertical" />
-          <a @click="handleSub(record)">订阅报警</a>
+          <a @click="handleDelete(record)">删除</a>
         </template>
       </span>
     </s-table>
@@ -123,15 +110,15 @@ const statusMap = {
   },
   1: {
     status: 'processing',
-    text: '运行中'
+    text: '施工中'
   },
   2: {
     status: 'success',
-    text: '已上线'
+    text: '已完成'
   },
   3: {
     status: 'error',
-    text: '异常'
+    text: '项目异常'
   }
 }
 
@@ -153,24 +140,27 @@ export default {
       // 表头
       columns: [
         {
-          title: '#',
+          title: '项目编号',
           scopedSlots: { customRender: 'serial' }
         },
         {
-          title: '规则编号',
+          title: '项目名称',
           dataIndex: 'no'
         },
         {
-          title: '描述',
-          dataIndex: 'description',
-          scopedSlots: { customRender: 'description' }
+          title: '项目管理员',
+          dataIndex: 'manager',
+          scopedSlots: { customRender: 'manager' }
         },
         {
-          title: '服务调用次数',
-          dataIndex: 'callNo',
-          sorter: true,
-          needTotal: true,
-          customRender: (text) => text + ' 次'
+          title: '联系方式',
+          dataIndex: 'contact',
+          scopedSlots: { customRender: 'contact' }
+        },
+        {
+          title: '劳工数',
+          dataIndex: 'numbers',
+          scopedSlots: { customRender: 'numbers' }
         },
         {
           title: '状态',
@@ -249,17 +239,6 @@ export default {
       }
     },
 
-    handleEdit (record) {
-      console.log(record)
-      this.$refs.modal.edit(record)
-    },
-    handleSub (record) {
-      if (record.status !== 0) {
-        this.$message.info(`${record.no} 订阅成功`)
-      } else {
-        this.$message.error(`${record.no} 订阅失败，规则已关闭`)
-      }
-    },
     handleOk () {
       this.$refs.table.refresh()
     },

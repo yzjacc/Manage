@@ -3,7 +3,7 @@
     <div class="table-page-search-wrapper">
       <a-form layout="inline">
         <a-row :gutter="48">
-          <a-col :md="8" :sm="24">
+           <a-col :md="8" :sm="24">
             <a-form-item label="项目名称">
               <a-input v-model="queryParam.name" placeholder="请输入项目名称"/>
             </a-form-item>
@@ -19,19 +19,6 @@
             </a-form-item>
           </a-col>
           <a-col :md="8" :sm="24">
-            <a-form-item label="项目归属">
-              <a-input v-model="queryParam.address" placeholder="请输入项目归属地"/>
-            </a-form-item>
-          </a-col>
-          <a-col :md="8" :sm="24">
-            <a-form-item label="有无分包">
-              <a-select v-model="queryParam.packet" placeholder="请选择" default-value="0">
-                <a-select-option value="0">有</a-select-option>
-                <a-select-option value="1">无</a-select-option>
-              </a-select>
-            </a-form-item>
-          </a-col>
-          <a-col :md="8" :sm="24">
             <a-form-item label="项目状态">
               <a-select v-model="queryParam.status" placeholder="请选择" default-value="0">
                 <a-select-option value="0">全部</a-select-option>
@@ -40,21 +27,22 @@
               </a-select>
             </a-form-item>
           </a-col>
-          <template v-if="advanced">
-            <a-col :md="8" :sm="24">
-              <a-form-item label="上线日期">
-                <a-date-picker v-model="queryParam.date" style="width: 100%" placeholder="请输入上线日期"/>
-              </a-form-item>
-            </a-col>
-          </template>
+          <a-col :md="8" :sm="24">
+            <a-form-item label="上线日期">
+              <a-date-picker v-model="queryParam.date" style="width: 100%" placeholder="请输入上线日期"/>
+            </a-form-item>
+          </a-col>
+          <!-- <template v-if="advanced">
+
+          </template> -->
           <a-col :md="!advanced && 8 || 24" :sm="24">
             <span class="table-page-search-submitButtons" :style="advanced && { float: 'right', overflow: 'hidden' } || {} ">
               <a-button type="primary" @click="$refs.table.refresh(true)">查询</a-button>
               <a-button style="margin-left: 8px" @click="() => queryParam = {}">重置</a-button>
-              <a @click="toggleAdvanced" style="margin-left: 8px">
+              <!-- <a @click="toggleAdvanced" style="margin-left: 8px">
                 {{ advanced ? '收起' : '展开' }}
                 <a-icon :type="advanced ? 'up' : 'down'"/>
-              </a>
+              </a> -->
             </span>
           </a-col>
         </a-row>
@@ -99,10 +87,6 @@
 
       <span slot="action" slot-scope="text, record">
         <template>
-          <a @click="handleEdit(record)">编辑归属</a>
-          <a-divider type="vertical" />
-          <a @click="handleSub(record)">添加分包</a>
-          <a-divider type="vertical" />
           <a @click="handleDelete(record)">删除</a>
         </template>
       </span>
@@ -118,8 +102,6 @@ import { STable, Ellipsis } from '@/components'
 import StepByStepModal from './modules/StepByStepModal'
 import CreateForm from './modules/CreateForm'
 import { getRoleList, getServiceList } from '@/api/manage'
-import { mapGetters } from 'vuex'
-import store from '../../store/index'
 
 const statusMap = {
   0: {
@@ -147,9 +129,6 @@ export default {
     Ellipsis,
     CreateForm,
     StepByStepModal
-  },
-  computed: {
-    ...mapGetters(['id'])
   },
   data () {
     return {
@@ -196,14 +175,13 @@ export default {
         {
           title: '操作',
           dataIndex: 'action',
-          width: '250px',
+          width: '150px',
           scopedSlots: { customRender: 'action' }
         }
       ],
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
-        // console.log('loadData.parameter', parameter)
-        console.log(store)
+        console.log('loadData.parameter', parameter)
         return getServiceList(Object.assign(parameter, this.queryParam))
           .then(res => {
             return res.result
@@ -261,17 +239,6 @@ export default {
       }
     },
 
-    handleEdit (record) {
-      console.log(record)
-      this.$refs.modal.edit(record)
-    },
-    handleSub (record) {
-      if (record.status !== 0) {
-        this.$message.info(`${record.no} 添加成功`)
-      } else {
-        this.$message.error(`${record.no} 添加失败，规则已关闭`)
-      }
-    },
     handleOk () {
       this.$refs.table.refresh()
     },
