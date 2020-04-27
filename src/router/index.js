@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import { constantRouterMap } from '@/config/router.config'
-// eslint-disable-next-line
-var demo = localStorage.getItem('user') == 'true' ? true : false
+// eslint-disable-next-line、
+import store from '../store/index'
 
 // hack router push callback
 const originalPush = Router.prototype.push
