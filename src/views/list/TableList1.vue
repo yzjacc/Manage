@@ -15,34 +15,34 @@
           </a-col>
           <a-col :md="8" :sm="24">
             <a-form-item label="项目管理员">
-              <a-input v-model="queryParam.manage" placeholder="请输入项目管理员"/>
+              <a-input v-model="queryParam.manager" placeholder="请输入项目管理员"/>
             </a-form-item>
           </a-col>
           <a-col :md="8" :sm="24">
             <a-form-item label="项目状态">
               <a-select v-model="queryParam.status" placeholder="请选择" default-value="0">
-                <a-select-option value="0">全部</a-select-option>
+                <a-select-option value="0">异常</a-select-option>
                 <a-select-option value="1">关闭</a-select-option>
                 <a-select-option value="2">运行中</a-select-option>
+                <a-select-option value="3">已上线</a-select-option>
               </a-select>
             </a-form-item>
           </a-col>
-          <a-col :md="8" :sm="24">
-            <a-form-item label="上线日期">
-              <a-date-picker v-model="queryParam.date" style="width: 100%" placeholder="请输入上线日期"/>
-            </a-form-item>
-          </a-col>
-          <!-- <template v-if="advanced">
-
-          </template> -->
+          <template v-if="advanced">
+            <a-col :md="8" :sm="24">
+              <a-form-item label="上线日期">
+                <a-date-picker v-model="queryParam.date" style="width: 100%" placeholder="请输入上线日期"/>
+              </a-form-item>
+            </a-col>
+          </template>
           <a-col :md="!advanced && 8 || 24" :sm="24">
             <span class="table-page-search-submitButtons" :style="advanced && { float: 'right', overflow: 'hidden' } || {} ">
               <a-button type="primary" @click="$refs.table.refresh(true)">查询</a-button>
               <a-button style="margin-left: 8px" @click="() => queryParam = {}">重置</a-button>
-              <!-- <a @click="toggleAdvanced" style="margin-left: 8px">
+              <a @click="toggleAdvanced" style="margin-left: 8px">
                 {{ advanced ? '收起' : '展开' }}
                 <a-icon :type="advanced ? 'up' : 'down'"/>
-              </a> -->
+              </a>
             </span>
           </a-col>
         </a-row>
@@ -51,18 +51,8 @@
 
     <div class="table-operator">
       <a-button type="primary" icon="plus" @click="$refs.createModal.add()">添加项目</a-button>&nbsp;&nbsp;
-      <a-button type="primary" icon="backlog" @click="$refs.createModal.add()">待办项目</a-button>&nbsp;
       <a-button type="dashed" @click="tableOption">{{ optionAlertShow && '关闭' || '开启' }} alert</a-button>
-      <a-dropdown v-action:edit v-if="selectedRowKeys.length > 0">
-        <a-menu slot="overlay">
-          <a-menu-item key="1"><a-icon type="delete" />删除</a-menu-item>
-          <!-- lock | unlock -->
-          <a-menu-item key="2"><a-icon type="lock" />锁定</a-menu-item>
-        </a-menu>
-        <a-button style="margin-left: 8px">
-          批量操作 <a-icon type="down" />
-        </a-button>
-      </a-dropdown>
+
     </div>
 
     <s-table
@@ -87,7 +77,7 @@
 
       <span slot="action" slot-scope="text, record">
         <template>
-          <a @click="handleDelete(record)">删除</a>
+          <a @click="() => del(record)">删除</a>
         </template>
       </span>
     </s-table>
@@ -99,31 +89,31 @@
 <script>
 import moment from 'moment'
 import { STable, Ellipsis } from '@/components'
-import StepByStepModal from './modules/StepByStepModal'
-import CreateForm from './modules/CreateForm'
+import StepByStepModal from '@/views/list/modules/StepByStepModal'
+import CreateForm from '@/views/list/modules/CreateForm'
 import { getRoleList, getServiceList } from '@/api/manage'
 
 const statusMap = {
   0: {
+    status: 'error',
+    text: '异常'
+  },
+  1: {
     status: 'default',
     text: '关闭'
   },
-  1: {
-    status: 'processing',
-    text: '施工中'
-  },
   2: {
-    status: 'success',
-    text: '已完成'
+    status: 'processing',
+    text: '运行中'
   },
   3: {
-    status: 'error',
-    text: '项目异常'
+    status: 'success',
+    text: '已上线'
   }
 }
 
 export default {
-  name: 'TableList',
+  name: 'Manage',
   components: {
     STable,
     Ellipsis,
@@ -141,11 +131,12 @@ export default {
       columns: [
         {
           title: '项目编号',
+          dataIndex: 'id',
           scopedSlots: { customRender: 'serial' }
         },
         {
           title: '项目名称',
-          dataIndex: 'no'
+          dataIndex: 'name'
         },
         {
           title: '项目管理员',
@@ -158,19 +149,14 @@ export default {
           scopedSlots: { customRender: 'contact' }
         },
         {
-          title: '劳工数',
-          dataIndex: 'numbers',
-          scopedSlots: { customRender: 'numbers' }
-        },
-        {
-          title: '状态',
+          title: '项目状态',
           dataIndex: 'status',
           scopedSlots: { customRender: 'status' }
         },
         {
-          title: '更新时间',
-          dataIndex: 'updatedAt',
-          sorter: true
+          title: '劳工数',
+          dataIndex: 'number',
+          scopedSlots: { customRender: 'number' }
         },
         {
           title: '操作',
@@ -238,7 +224,25 @@ export default {
         this.optionAlertShow = false
       }
     },
-
+    del (row) {
+      this.$confirm({
+        title: '警告',
+        content: `真的要删除 ${row.no} 吗?`,
+        okText: '删除',
+        okType: 'danger',
+        cancelText: '取消',
+        onOk () {
+          console.log('OK')
+          // 在这里调用删除接口
+          return new Promise((resolve, reject) => {
+            setTimeout(Math.random() > 0.5 ? resolve : reject, 1000)
+          }).catch(() => console.log('Oops errors!'))
+        },
+        onCancel () {
+          console.log('Cancel')
+        }
+      })
+    },
     handleOk () {
       this.$refs.table.refresh()
     },
