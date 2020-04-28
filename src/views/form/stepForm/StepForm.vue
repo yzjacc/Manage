@@ -1,62 +1,74 @@
 <template>
-  <a-card :bordered="false">
-    <a-steps class="steps" :current="currentTab">
-      <a-step title="填写转账信息" />
-      <a-step title="确认转账信息" />
-      <a-step title="完成" />
-    </a-steps>
-    <div class="content">
-      <step1 v-if="currentTab === 0" @nextStep="nextStep"/>
-      <step2 v-if="currentTab === 1" @nextStep="nextStep" @prevStep="prevStep"/>
-      <step3 v-if="currentTab === 2" @prevStep="prevStep" @finish="finish"/>
-    </div>
-  </a-card>
+  <div>
+    <a-button type="primary" @click="showModal">Open Modal with async logic</a-button>
+    <a-modal
+      :visible="visible"
+      @ok="handleOk"
+      :closable="false"
+      :confirmLoading="confirmLoading"
+      @cancel="handleCancel"
+    >
+      <div class="layui-layer-title">
+        <a-row type="flex" justify="space-between">
+          <a-col :span="5">
+            <span>添加文字</span>
+          </a-col>
+          <a-col>
+            <div class=""></div>
+          </a-col>
+        </a-row>
+      </div>
+      <p>{{ ModalText }}</p>
+    </a-modal>
+  </div>
 </template>
-
 <script>
-import Step1 from './Step1'
-import Step2 from './Step2'
-import Step3 from './Step3'
-
 export default {
-  name: 'StepForm',
-  components: {
-    Step1,
-    Step2,
-    Step3
-  },
   data () {
     return {
-      description: '将一个冗长或用户不熟悉的表单任务分成多个步骤，指导用户完成。',
-      currentTab: 0,
-
-      // form
-      form: null
+      ModalText: 'Content of the modal abc',
+      visible: false,
+      confirmLoading: false
     }
   },
   methods: {
-
-    // handler
-    nextStep () {
-      if (this.currentTab < 2) {
-        this.currentTab += 1
-      }
+    showModal () {
+      this.visible = true
     },
-    prevStep () {
-      if (this.currentTab > 0) {
-        this.currentTab -= 1
-      }
+    handleOk (e) {
+      this.ModalText = 'The modal will be closed after two seconds'
+      this.confirmLoading = true
+      setTimeout(() => {
+        this.visible = false
+        this.confirmLoading = false
+      }, 2000)
     },
-    finish () {
-      this.currentTab = 0
+    handleCancel (e) {
+      this.visible = false
     }
   }
 }
 </script>
 
-<style lang="less" scoped>
-  .steps {
-    max-width: 750px;
-    margin: 16px auto;
-  }
+<style scoped>
+.web {
+  padding: 0 !important;
+  font-size: 0 !important;
+  line-height: 1 !important;
+}
+
+.layui-layer-title {
+  background: #22222c !important;
+  color: #fff;
+  padding: 0 80px 0 20px;
+  height: 42px;
+  line-height: 42px;
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
+  color: #333;
+  overflow: hidden;
+  background-color: #F8F8F8;
+  border-radius: 2px 2px 0 0;
+}
+
 </style>
