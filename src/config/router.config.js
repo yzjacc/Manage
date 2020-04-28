@@ -81,7 +81,21 @@ export const asyncRouterMap = [
             path: '/list/clock',
             name: 'Clock',
             component: () => import('@/views/list/StandardList'),
-            meta: { title: '打卡记录', keepAlive: true, permission: [ 'table' ] }
+            meta: { title: '打卡记录', keepAlive: true, permission: [ 'table' ] },
+            children: [
+              {
+                path: '/list/search/article',
+                name: 'SearchArticles',
+                component: () => import('@/views/list/TableList'),
+                meta: { title: '日考勤', permission: [ 'table' ] }
+              },
+              {
+                path: '/list/search/project',
+                name: 'SearchProjects',
+                component: () => import('@/views/other/PermissionList'),
+                meta: { title: '月考勤', permission: [ 'table' ] }
+              }
+            ]
           },
           {
             path: '/list/card',
@@ -152,19 +166,6 @@ export const constantRouterMap = [
         name: 'recover',
         component: () => import(/* webpackChunkName: "user" */ '@/views/user/Register')
 
-      }
-    ]
-  },
-
-  {
-    path: '/test',
-    component: BlankLayout,
-    redirect: '/test/home',
-    children: [
-      {
-        path: 'home',
-        name: 'TestHome',
-        component: () => import('@/views/Home')
       }
     ]
   },

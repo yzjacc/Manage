@@ -101,7 +101,7 @@
 
 <script>
 import { mixinDevice } from '@/utils/mixin.js'
-import { getSmsCaptcha } from '@/api/login'
+// import { getSmsCaptcha } from '@/api/login'
 
 const levelNames = {
   0: '低',
@@ -221,43 +221,43 @@ export default {
       })
     },
 
-    getCaptcha (e) {
-      e.preventDefault()
-      const { form: { validateFields }, state, $message, $notification } = this
+    // getCaptcha (e) {
+    //   e.preventDefault()
+    //   const { form: { validateFields }, state, $message, $notification } = this
 
-      validateFields(['mobile'], { force: true },
-        (err, values) => {
-          if (!err) {
-            state.smsSendBtn = true
+    //   validateFields(['mobile'], { force: true },
+    //     (err, values) => {
+    //       if (!err) {
+    //         state.smsSendBtn = true
 
-            const interval = window.setInterval(() => {
-              if (state.time-- <= 0) {
-                state.time = 60
-                state.smsSendBtn = false
-                window.clearInterval(interval)
-              }
-            }, 1000)
+    //         const interval = window.setInterval(() => {
+    //           if (state.time-- <= 0) {
+    //             state.time = 60
+    //             state.smsSendBtn = false
+    //             window.clearInterval(interval)
+    //           }
+    //         }, 1000)
 
-            const hide = $message.loading('验证码发送中..', 0)
+    //         const hide = $message.loading('验证码发送中..', 0)
 
-            getSmsCaptcha({ mobile: values.mobile }).then(res => {
-              setTimeout(hide, 2500)
-              $notification['success']({
-                message: '提示',
-                description: '验证码获取成功，您的验证码为：' + res.result.captcha,
-                duration: 8
-              })
-            }).catch(err => {
-              setTimeout(hide, 1)
-              clearInterval(interval)
-              state.time = 60
-              state.smsSendBtn = false
-              this.requestFailed(err)
-            })
-          }
-        }
-      )
-    },
+    //         getSmsCaptcha({ mobile: values.mobile }).then(res => {
+    //           setTimeout(hide, 2500)
+    //           $notification['success']({
+    //             message: '提示',
+    //             description: '验证码获取成功，您的验证码为：' + res.result.captcha,
+    //             duration: 8
+    //           })
+    //         }).catch(err => {
+    //           setTimeout(hide, 1)
+    //           clearInterval(interval)
+    //           state.time = 60
+    //           state.smsSendBtn = false
+    //           this.requestFailed(err)
+    //         })
+    //       }
+    //     }
+    //   )
+    // },
     requestFailed (err) {
       this.$notification['error']({
         message: '错误',

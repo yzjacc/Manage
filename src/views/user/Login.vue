@@ -33,7 +33,7 @@
               size="large"
               type="password"
               autocomplete="false"
-              placeholder="密码: ant.design"
+              placeholder="密码: admin"
               v-decorator="[
                 'password',
                 {rules: [{ required: true, message: '请输入密码' }], validateTrigger: 'blur'}
@@ -91,7 +91,6 @@
 </template>
 
 <script>
-import md5 from 'md5'
 import TwoStepCaptcha from '@/components/tools/TwoStepCaptcha'
 import { mapActions, mapGetters } from 'vuex'
 import { timeFix } from '@/utils/util'
@@ -171,10 +170,9 @@ export default {
 
       validateFields(validateFieldsKey, { force: true }, (err, values) => {
         if (!err) {
-          const loginParams = { id, ...values }
+          const loginParams = { role: id ? 'admin' : 'user', ...values }
           delete loginParams.username
           loginParams[!state.loginType ? 'email' : 'username'] = values.username
-          loginParams.password = md5(values.password)
           console.log('login form', loginParams)
           Login(loginParams)
             .then((res) => this.loginSuccess(res))

@@ -79,27 +79,6 @@ const rootRouter = {
  * @param token
  * @returns {Promise<Router>}
  */
-export const generatorDynamicRouter = (token) => {
-  return new Promise((resolve, reject) => {
-    loginService.getCurrentUserNav(token).then(res => {
-      console.log('res', res)
-      const { result } = res
-      const menuNav = []
-      const childrenNav = []
-      //      后端数据, 根级树数组,  根级 PID
-      listToTree(result, childrenNav, 0)
-      rootRouter.children = childrenNav
-      menuNav.push(rootRouter)
-      console.log('menuNav', menuNav)
-      const routers = generator(menuNav)
-      routers.push(notFoundRouter)
-      console.log('routers', routers)
-      resolve(routers)
-    }).catch(err => {
-      reject(err)
-    })
-  })
-}
 
 /**
  * 格式化树形结构数据 生成 vue-router 层级路由表

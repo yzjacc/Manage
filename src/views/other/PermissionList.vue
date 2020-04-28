@@ -4,8 +4,19 @@
       <a-form layout="inline">
         <a-row :gutter="48">
           <a-col :md="8" :sm="24">
-            <a-form-item label="角色ID">
+            <a-form-item label="姓名">
               <a-input placeholder="请输入"/>
+            </a-form-item>
+          </a-col>
+          <a-col :md="8" :sm="24">
+            <!-- 数据在tableList组件 -->
+            <a-form-item label="开始时间">
+              <a-date-picker v-model="queryParam.date" style="width: 100%" placeholder="请输入更新日期"/>
+            </a-form-item>
+          </a-col>
+          <a-col :md="8" :sm="24">
+            <a-form-item label="结束时间">
+              <a-date-picker v-model="queryParam.date" style="width: 100%" placeholder="请输入更新日期"/>
             </a-form-item>
           </a-col>
           <a-col :md="8" :sm="24">
@@ -70,21 +81,11 @@
         <a-form-item
           :labelCol="labelCol"
           :wrapperCol="wrapperCol"
-          label="唯一识别码"
+          label="姓名"
           hasFeedback
           validateStatus="success"
         >
-          <a-input placeholder="唯一识别码" v-model="mdl.id" id="no" disabled="disabled" />
-        </a-form-item>
-
-        <a-form-item
-          :labelCol="labelCol"
-          :wrapperCol="wrapperCol"
-          label="权限名称"
-          hasFeedback
-          validateStatus="success"
-        >
-          <a-input placeholder="起一个名字" v-model="mdl.name" id="permission_name" />
+          <a-input placeholder="姓名" v-model="mdl.id" id="no" disabled="disabled" />
         </a-form-item>
 
         <a-form-item
@@ -164,29 +165,24 @@ export default {
       // 表头
       columns: [
         {
-          title: '唯一识别码',
+          title: '日期',
           dataIndex: 'id'
         },
         {
-          title: '权限名称',
+          title: '姓名',
           dataIndex: 'name'
         },
         {
-          title: '可操作权限',
-          dataIndex: 'actions',
-          scopedSlots: { customRender: 'actions' }
-        },
-        {
-          title: '状态',
+          title: '打卡记录',
           dataIndex: 'status',
           scopedSlots: { customRender: 'status' }
-        },
-        {
-          title: '操作',
-          width: '150px',
-          dataIndex: 'action',
-          scopedSlots: { customRender: 'action' }
         }
+        // {
+        //   title: '操作',
+        //   width: '150px',
+        //   dataIndex: 'action',
+        //   scopedSlots: { customRender: 'action' }
+        // }
       ],
       // 向后端拉取可以用的操作列表
       permissionList: null,
