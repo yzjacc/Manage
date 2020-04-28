@@ -56,7 +56,7 @@ export const asyncRouterMap = [
           {
             path: '/form/worker-manage',
             name: 'Manage',
-            component: () => import('@/views/form/stepForm/StepForm'),
+            component: () => import('@/views/form/stepForm/Detail'),
             meta: { title: '工种管理', keepAlive: true, permission: [ 'form' ] }
           }
         ]
