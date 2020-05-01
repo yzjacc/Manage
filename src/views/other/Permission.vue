@@ -91,19 +91,7 @@
         <a-form-item
           :labelCol="labelCol"
           :wrapperCol="wrapperCol"
-          label="人员状态"
-          hasFeedback
-          validateStatus="warning"
-        >
-          <a-select v-model="mdl.status">
-            <a-select-option value="1">正常</a-select-option>
-            <a-select-option value="2">禁用</a-select-option>
-          </a-select>
-        </a-form-item>
-        <a-form-item
-          :labelCol="labelCol"
-          :wrapperCol="wrapperCol"
-          label="补卡原因"
+          label="状态"
           hasFeedback
           validateStatus="warning"
         >
@@ -156,7 +144,7 @@ export default {
   },
   data () {
     return {
-      // description: '列表使用场景：后台管理中的权限管理以及角色管理，可用于基于 RBAC 设计的角色权限控制，颗粒度细到每一个操作类型。',
+      description: '列表使用场景：后台管理中的权限管理以及角色管理，可用于基于 RBAC 设计的角色权限控制，颗粒度细到每一个操作类型。',
 
       visible: false,
       labelCol: {
@@ -177,41 +165,15 @@ export default {
       // 表头
       columns: [
         {
+          title: '日期',
+          dataIndex: 'id'
+        },
+        {
           title: '姓名',
           dataIndex: 'name'
         },
         {
-          title: '劳工编号',
-          dataIndex: 'id'
-        },
-        {
-          title: '进场/出场',
-          dataIndex: 'id'
-        },
-        {
-          title: '工种',
-          dataIndex: 'id'
-        },
-        {
-          title: '补卡类型',
-          dataIndex: 'id'
-        },
-        {
-          title: '补打卡时间',
-          dataIndex: 'id'
-        },
-        {
-          title: '补卡负责人',
-          dataIndex: 'status',
-          scopedSlots: { customRender: 'status' }
-        },
-        {
-          title: '创建时间',
-          dataIndex: 'status',
-          scopedSlots: { customRender: 'status' }
-        },
-        {
-          title: '备注',
+          title: '打卡记录',
           dataIndex: 'status',
           scopedSlots: { customRender: 'status' }
         }

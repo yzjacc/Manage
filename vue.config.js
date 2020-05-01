@@ -90,7 +90,7 @@ const vueConfig = {
     port: 8080, // 端口号
     https: false, // https:{type:Boolean}
     open: true,
-    proxy: 'http://139.159.254.105:8080'
+    proxy: 'http://112.126.65.197:8080/labour/'
   },
 
   // disable source map in production

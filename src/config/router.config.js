@@ -86,7 +86,7 @@ export const asyncRouterMap = [
               {
                 path: '/list/search/article',
                 name: 'SearchArticles',
-                component: () => import('@/views/list/TableList'),
+                component: () => import('@/views/other/PermissionList'),
                 meta: { title: '日考勤', permission: [ 'table' ] }
               },
               {
@@ -106,9 +106,23 @@ export const asyncRouterMap = [
           {
             path: '/list/table',
             name: 'Table',
-            component: () => import('@/views/list/search/SearchLayout'),
-            redirect: '/list/search/article',
-            meta: { title: '考勤报表', keepAlive: true, permission: [ 'table' ] }
+            component: () => import('@/views/list/search/Search'),
+            redirect: '/list/table/article',
+            meta: { title: '考勤报表', keepAlive: true, permission: [ 'table' ] },
+            children: [
+              {
+                path: '/list/table/article',
+                name: 'SearchArticles',
+                component: () => import('@/views/other/Permission'),
+                meta: { title: '考勤日报', permission: [ 'table' ] }
+              },
+              {
+                path: '/list/table/project',
+                name: 'SearchProjects',
+                component: () => import('@/views/other/Permission'),
+                meta: { title: '考勤月报', permission: [ 'table' ] }
+              }
+            ]
           }
         ]
       },
@@ -123,7 +137,7 @@ export const asyncRouterMap = [
           {
             path: '/exception/test',
             name: 'Test',
-            component: () => import(/* webpackChunkName: "fail" */ '@/views/exception/403'),
+            component: () => import(/* webpackChunkName: "fail" */ '@/views/exception/test'),
             meta: { title: '疫情报表', permission: [ 'exception' ] }
           }
         ]
