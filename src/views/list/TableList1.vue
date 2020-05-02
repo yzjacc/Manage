@@ -91,8 +91,9 @@ import moment from 'moment'
 import { STable, Ellipsis } from '@/components'
 import StepByStepModal from '@/views/list/modules/StepByStepModal'
 import CreateForm from '@/views/list/modules/CreateForm'
-import { getRoleList, getServiceList } from '@/api/manage'
+import { getRoleList } from '@/api/manage'
 import { axios } from '../../utils/request'
+import { builder } from '../../mock/util'
 
 const statusMap = {
   0: {
@@ -137,7 +138,7 @@ export default {
         },
         {
           title: '项目名称',
-          dataIndex: 'name'
+          dataIndex: 'description'
         },
         {
           title: '项目管理员',
@@ -146,7 +147,7 @@ export default {
         },
         {
           title: '联系方式',
-          dataIndex: 'contact',
+          dataIndex: 'lal',
           scopedSlots: { customRender: 'contact' }
         },
         {
@@ -169,10 +170,43 @@ export default {
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
         console.log('loadData.parameter', parameter)
-        return getServiceList(Object.assign(parameter, this.queryParam))
-          .then(res => {
-            return res.result
+        return axios({
+          method: 'get',
+          url: '/labour/proInformation/allProInformations?pageNum=1'
+        }).then(res => {
+          const totalCount = 50
+          const parameters = {
+            pageNo: 1,
+            pageSize: 200
+          }
+          const result = []
+          const pageNo = parseInt(parameters.pageNo)
+          const pageSize = parseInt(parameters.pageSize)
+          const totalPage = Math.ceil(totalCount / pageSize)
+          const key = (pageNo - 1) * pageSize
+          const next = (pageNo >= totalPage ? (totalCount % pageSize) : pageSize) + 1
+          for (let i = 1; i < next; i++) {
+            const tmpKey = key + i
+            result.push({
+              key: tmpKey,
+              id: tmpKey,
+              lal: 's',
+              no: 'No ' + tmpKey,
+              description: '这是一段描述',
+              callNo: 800,
+              status: 2,
+              updatedAt: 2000 - 20 - 20,
+              editable: false
+            })
+          }
+          return builder({
+            pageSize: pageSize,
+            pageNo: pageNo,
+            totalCount: totalCount,
+            totalPage: totalPage,
+            data: result
           })
+        })
       },
       selectedRowKeys: [],
       selectedRows: [],
@@ -199,10 +233,6 @@ export default {
   created () {
     this.tableOption()
     getRoleList({ t: new Date() })
-    axios({
-      method: 'get',
-      url: '/proInformation/allProInformations?pageNum=1'
-    })
   },
   methods: {
     tableOption () {
