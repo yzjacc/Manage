@@ -98,7 +98,7 @@
             <a-divider style="margin-bottom: 32px"/>
             <a-col :md="24" :sm="24">
               <span class="table-page-search-submitButtons" :style="advanced && { float: 'left', overflow: 'hidden' } || {} ">
-              | 劳工信息
+                | 劳工信息
               </span>
             </a-col>
             <a-col :md="8" :sm="24">

@@ -22,19 +22,19 @@ export const asyncRouterMap = [
             // hidden: demo,
             path: '/dashboard/pro-basic',
             name: 'Basic',
-            component: () => import('@/views/dashboard/Analysis'),
+            component: () => import('@/views/pro/Analysis'),
             meta: { title: '项目基本信息', keepAlive: true, permission: [ 'dashboard' ] }
           },
           {
             path: '/dashboard/pro-mess/:pageNo([1-9]\\d*)?',
             name: 'Message',
-            component: () => import('@/views/list/TableList1'),
+            component: () => import('@/views/pro/TableList'),
             meta: { title: '项目信息', keepAlive: false, permission: [ 'dashboard' ] }
           },
           {
             path: '/dashboard/pro-person/:pageNo([1-9]\\d*)?',
             name: 'Person',
-            component: () => import('@/views/list/Person'),
+            component: () => import('@/views/pro/Person'),
             meta: { title: '项目人员', keepAlive: true, permission: [ 'dashboard' ] }
           }
         ]
@@ -50,7 +50,7 @@ export const asyncRouterMap = [
           {
             path: '/form/worker-mess',
             name: 'WorkerMessage',
-            component: () => import('@/views/form/stepForm/StepForm'),
+            component: () => import('@/views/work/TableList'),
             meta: { title: '劳工信息', keepAlive: true, permission: [ 'form' ] }
           },
           {
@@ -113,7 +113,7 @@ export const asyncRouterMap = [
               {
                 path: '/list/table/article',
                 name: 'SearchArticles',
-                component: () => import('@/views/other/Permission'),
+                component: () => import('@/views/other/RoleList'),
                 meta: { title: '考勤日报', permission: [ 'table' ] }
               },
               {

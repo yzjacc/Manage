@@ -124,11 +124,6 @@ export default {
           scopedSlots: { customRender: 'sorts' }
         },
         {
-          title: '班组',
-          dataIndex: 'class',
-          scopedSlots: { customRender: 'class' }
-        },
-        {
           title: '上岗日期',
           dataIndex: 'date',
           scopedSlots: { customRender: 'date' }
