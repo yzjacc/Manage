@@ -239,9 +239,9 @@ export default {
       console.log(this.mdl)
       this.visible = true
     },
-    handleOk () {
+    // handleOk () {
 
-    },
+    // },
     onChange (selectedRowKeys, selectedRows) {
       this.selectedRowKeys = selectedRowKeys
       this.selectedRows = selectedRows

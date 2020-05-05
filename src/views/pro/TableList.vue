@@ -5,22 +5,22 @@
         <a-row :gutter="48">
           <a-col :md="8" :sm="24">
             <a-form-item label="项目名称">
-              <a-input v-model="queryParam.description" placeholder="请输入项目名称"/>
+              <a-input v-model="queryParam.projectName" placeholder="请输入项目名称"/>
             </a-form-item>
           </a-col>
           <a-col :md="8" :sm="24">
             <a-form-item label="项目编号">
-              <a-input v-model="queryParam.id" placeholder="请输入项目编号"/>
+              <a-input v-model="queryParam.projectNum" placeholder="请输入项目编号"/>
             </a-form-item>
           </a-col>
           <a-col :md="8" :sm="24">
             <a-form-item label="项目管理员">
-              <a-input v-model="queryParam.manager" placeholder="请输入项目管理员"/>
+              <a-input v-model="queryParam.memberName" placeholder="请输入项目管理员"/>
             </a-form-item>
           </a-col>
           <a-col :md="8" :sm="24">
             <a-form-item label="项目状态">
-              <a-select v-model="queryParam.status" placeholder="请选择" default-value="0">
+              <a-select v-model="queryParam.state" placeholder="请选择" default-value="0">
                 <a-select-option value="0">未完成</a-select-option>
                 <a-select-option value="1">完成</a-select-option>
               </a-select>
@@ -33,7 +33,7 @@
           </a-col>
           <a-col :md="!advanced && 8 || 24" :sm="24">
             <span class="table-page-search-submitButtons" :style="advanced && { float: 'right', overflow: 'hidden' } || {} ">
-              <a-button type="primary" @click="$refs.table.refresh(true)">查询</a-button>
+              <a-button type="primary" @click="$refs.table.refresh(true, {queryParam})">查询</a-button>
               <a-button style="margin-left: 8px" @click="() => queryParam = {}">重置</a-button>
             </span>
           </a-col>
@@ -61,6 +61,7 @@
       :columns="columns"
       :data="loadData"
       :alert="{ show: true, clear: true }"
+      :search="search"
       :rowSelection="{ selectedRowKeys: this.selectedRowKeys, onChange: this.onSelectChange }"
     >
       <template v-for="(col, index) in columns" v-if="col.scopedSlots" :slot="col.dataIndex" slot-scope="text, record">
@@ -100,6 +101,7 @@ import { STable } from '@/components'
 import { axios } from '../../utils/request'
 import { builder } from '../../mock/util'
 import CreateForm from './modules/MessCreateForm'
+import qs from 'qs'
 
 export default {
   name: 'TableList',
@@ -165,6 +167,7 @@ export default {
           method: 'get',
           url: `/labour/proInformation/allProInformations?pageNum=${parameter.pageNum - 1}&pageSize=10`
         }).then(mork => {
+          console.log(mork)
           const totalCount = mork.total
           const parameters = {
             pageNo: mork.pageNum,
@@ -174,19 +177,17 @@ export default {
           const pageNo = parseInt(parameters.pageNo)
           const pageSize = parseInt(parameters.pageSize)
           const totalPage = Math.ceil(totalCount / pageSize)
-          const key = (pageNo - 1) * pageSize
+          // const key = (pageNo - 1) * pageSize
           const next = (pageNo >= totalPage ? (totalCount % pageSize) : pageSize) + 1
           for (let i = 1; i < next; i++) {
-            const tmpKey = key + i
+            // const tmpKey = key + i
             var date = new Date(mork.list[i - 1].gmtCreate)
             result.push({
-              key: tmpKey,
+              key: mork.list[i - 1].projectId,
               id: mork.list[i - 1].projectNum,
               manager: mork.list[i - 1].proPersonnel.memberName,
               tel: mork.list[i - 1].telephone,
-              no: 'No ' + tmpKey,
               description: mork.list[i - 1].projectName,
-              callNo: 800,
               number: mork.list[i - 1].labourNum,
               status: mork.list[i - 1].state,
               updatedAt: date.getFullYear() + '-' + date.getMonth() + '-' + date.getDate(),
@@ -202,18 +203,81 @@ export default {
           })
         })
       },
-
+      search: parameter => {
+        parameter = {
+          pageNum: String(parameter.pageNum),
+          pageSize: String(parameter.pageSize),
+          memberName: parameter.queryParam.memberName,
+          projectNum: parameter.queryParam.projectNum,
+          projectName: parameter.queryParam.projectName,
+          state: '完成'
+        }
+        console.log('search', parameter)
+        return axios({
+          method: 'post',
+          url: `/labour/proInformation/getProInformationsByCondition`,
+          data: qs.stringify(parameter)
+        }).then(mork => {
+          const totalCount = mork.total
+          const parameters = {
+            pageNo: mork.pageNum,
+            pageSize: mork.pageSize
+          }
+          const result = []
+          const pageNo = parseInt(parameters.pageNo)
+          const pageSize = parseInt(parameters.pageSize)
+          const totalPage = Math.ceil(totalCount / pageSize)
+          // const key = (pageNo - 1) * pageSize
+          const next = (pageNo >= totalPage ? (totalCount % pageSize) : pageSize) + 1
+          for (let i = 1; i < next; i++) {
+            // const tmpKey = key + i
+            var date = new Date(mork.list[i - 1].gmtCreate)
+            result.push({
+              key: mork.list[i - 1].projectId,
+              id: mork.list[i - 1].projectNum,
+              manager: mork.list[i - 1].proPersonnel.memberName,
+              tel: mork.list[i - 1].telephone,
+              description: mork.list[i - 1].projectName,
+              number: mork.list[i - 1].labourNum,
+              status: mork.list[i - 1].state,
+              updatedAt: date.getFullYear() + '-' + date.getMonth() + '-' + date.getDate(),
+              editable: false
+            })
+          }
+          return builder({
+            pageSize: pageSize,
+            pageNo: pageNo,
+            totalCount: totalCount,
+            totalPage: totalPage,
+            data: result
+          })
+        })
+      },
       selectedRowKeys: [],
       selectedRows: []
     }
   },
   methods: {
-
+    handleOk (value) {
+      console.log('hhhhhh')
+      value.state = value.state === 0 ? '完成' : '未完成'
+      value.gmtCreate = value.gmtCreate._d.getTime()
+      axios({
+        method: 'post',
+        url: `/labour/proInformation/insertProInformation`,
+        data: qs.stringify(value)
+      }).then(() => {
+        this.$refs.table.refresh(true)
+      })
+    },
     handleChange (value, key, column, record) {
       console.log(value, key, column)
       record[column.dataIndex] = value
     },
+    add () {
+    },
     edit (row) {
+      console.log(row)
       row.editable = true
       // row = Object.assign({}, row)
     },
@@ -226,11 +290,19 @@ export default {
         okType: 'danger',
         cancelText: '取消',
         onOk () {
-          console.log('OK')
+          console.log(row.no)
           // 在这里调用删除接口
-          return new Promise((resolve, reject) => {
-            setTimeout(Math.random() > 0.5 ? resolve : reject, 1000)
-          }).catch(() => console.log('Oops errors!'))
+          return axios({
+            method: 'get',
+            url: `/labour/proInformation/deleteProInformation/${row.no.split(' ')[1]}`
+            // data: {
+            //   projectId: row.no.split(' ')[1]
+            // }
+          }).then(() => {
+          })
+          // return new Promise((resolve, reject) => {
+          //   setTimeout(Math.random() > 0.5 ? resolve : reject, 1000)
+          // }).catch(() => console.log('Oops errors!'))
         },
         onCancel () {
           console.log('Cancel')
@@ -238,7 +310,13 @@ export default {
       })
     },
     save (row) {
-      console.log(row, 'ss')
+      axios({
+        method: 'post',
+        url: `/labour/proInformation/updateProInformation`,
+        data: qs.stringify(row)
+      }).then(() => {
+        this.$refs.table.refresh(true)
+      })
       row.editable = false
       this.$refs.table.refresh(true)
     },

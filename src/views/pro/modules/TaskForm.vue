@@ -1,44 +1,45 @@
 <template>
-  <a-modal :width="640" :visible="visible" title="任务添加" @ok="handleSubmit" @cancel="visible = false">
-    <a-form @submit="handleSubmit" :form="form">
-      <a-form-item
-        label="任务名称"
-        :labelCol="labelCol"
-        :wrapperCol="wrapperCol"
-      >
-        <a-input v-decorator="['taskName', {rules:[{required: true, message: '请输入任务名称'}]}]" />
-      </a-form-item>
-      <a-form-item
-        label="开始时间"
-        :labelCol="labelCol"
-        :wrapperCol="wrapperCol"
-      >
-        <a-date-picker style="width: 100%" v-decorator="['startTime', {rules:[{required: true, message: '请选择开始时间'}]}]" />
-      </a-form-item>
-      <a-form-item
-        label="任务负责人"
-        :labelCol="labelCol"
-        :wrapperCol="wrapperCol"
-      >
-        <a-select v-decorator="['owner', {rules:[{required: true, message: '请选择开始时间'}]}]">
-          <a-select-option :value="0">付晓晓</a-select-option>
-          <a-select-option :value="1">周毛毛</a-select-option>
-        </a-select>
-      </a-form-item>
-      <a-form-item
-        label="产品描述"
-        :labelCol="labelCol"
-        :wrapperCol="wrapperCol"
-      >
-        <a-textarea v-decorator="['desc']"></a-textarea>
-      </a-form-item>
-    </a-form>
+  <a-modal
+    title="新建项目"
+    :width="640"
+    :visible="visible"
+    :confirmLoading="confirmLoading"
+    @ok="handleSubmit"
+    @cancel="handleCancel"
+  >
+    <a-spin :spinning="confirmLoading">
+      <a-form :form="form">
+        <a-form-item
+          label="项目信息输入"
+          :labelCol="labelCol"
+          :wrapperCol="wrapperCol"
+        >
+          <a-input placeholder="请输入项目编号"/>
+          <a-input placeholder="请输入项目名称"/>
+          <a-input placeholder="请输入项目管理员ID"/>
+          <a-input placeholder="请输入项目管理员联系方式"/>
+          <a-input placeholder="请输入项目项目状态 完成/未完成"/>
+          <a-input placeholder="请输入项目劳工数"/>
+          <a-input placeholder="请输入项目创建时间"/>
+          <!-- <a-input placeholder="请输入项目归属"/> -->
+          <!-- <a-select v-model="one" placeholder="请输入项目有无分包">
+            <a-select-option value="0">有</a-select-option>
+            <a-select-option value="1">无</a-select-option>
+          </a-select> -->
+          <!-- <a-select v-model="two" placeholder="请输入项目状态">
+            <a-select-option value="0">全部</a-select-option>
+            <a-select-option value="1">关闭</a-select-option>
+            <a-select-option value="2">运行中</a-select-option>
+          </a-select> -->
+          <a-date-picker style="width: 100%" placeholder="更新时间"/>
+        </a-form-item>
+      </a-form>
+    </a-spin>
   </a-modal>
 </template>
 
 <script>
 export default {
-  name: 'TaskForm',
   data () {
     return {
       labelCol: {
@@ -49,8 +50,9 @@ export default {
         xs: { span: 24 },
         sm: { span: 13 }
       },
-
       visible: false,
+      confirmLoading: false,
+
       form: this.$form.createForm(this)
     }
   },
@@ -58,21 +60,24 @@ export default {
     add () {
       this.visible = true
     },
-    edit (record) {
-      const { form: { setFieldsValue } } = this
-      this.visible = true
-      this.$nextTick(() => {
-        setFieldsValue({ taskName: 'test' })
-      })
-    },
     handleSubmit () {
       const { form: { validateFields } } = this
-      this.visible = true
+      this.confirmLoading = true
       validateFields((errors, values) => {
         if (!errors) {
           console.log('values', values)
+          setTimeout(() => {
+            this.visible = false
+            this.confirmLoading = false
+            this.$emit('ok', values)
+          }, 1500)
+        } else {
+          this.confirmLoading = false
         }
       })
+    },
+    handleCancel () {
+      this.visible = false
     }
   }
 }

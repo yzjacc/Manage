@@ -218,9 +218,9 @@ export default {
     handleEdit (record) {
       this.$emit('onEdit', record)
     },
-    handleOk () {
+    // handleOk () {
 
-    },
+    // },
 
     onSelectChange (selectedRowKeys, selectedRows) {
       this.selectedRowKeys = selectedRowKeys

@@ -14,9 +14,13 @@
           :labelCol="labelCol"
           :wrapperCol="wrapperCol"
         >
-          <a-input placeholder="请输入项目成员"/>
-          <a-input placeholder="请输入项目岗位"/>
-          <a-input placeholder="请输入项目联系方式"/>
+          <a-input placeholder="请输入项目编号"/>
+          <a-input placeholder="请输入项目名称"/>
+          <a-input placeholder="请输入项目管理员ID"/>
+          <a-input placeholder="请输入项目管理员联系方式"/>
+          <a-input placeholder="请输入项目项目状态 完成/未完成"/>
+          <a-input placeholder="请输入项目劳工数"/>
+          <a-input placeholder="请输入项目创建时间"/>
           <!-- <a-input placeholder="请输入项目归属"/> -->
           <!-- <a-select v-model="one" placeholder="请输入项目有无分包">
             <a-select-option value="0">有</a-select-option>

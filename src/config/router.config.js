@@ -43,8 +43,8 @@ export const asyncRouterMap = [
       // forms
       {
         path: '/form',
-        redirect: '/form/base-form',
-        component: PageView,
+        redirect: '/form/worker-mess',
+        component: RouteView,
         meta: { title: '劳务信息', icon: 'form', permission: [ 'form' ] },
         children: [
           {

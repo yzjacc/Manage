@@ -34,7 +34,8 @@
           <a-col :md=" 14" :sm="24" style="margin-left:30px">
             <span class="table-page-search-submitButtons" :style="{ float: 'right', overflow: 'hidden' } || {} ">
               <a-button type="primary" @click="$refs.table.refresh(true)">查询</a-button>
-              <a-button style="margin-left: 8px" @click="() => queryParam = {}">重置</a-button>
+              <a-button style="margin: 0 8px" @click="() => queryParam = {}">重置</a-button>
+              <a href="/labour/labour/outputExcel" download="文件名.xls"><a-button type="primary">导出</a-button></a>
             </span>
           </a-col>
         </a-row>
@@ -171,7 +172,7 @@ export default {
         console.log('loadData.parameter', parameter)
         return axios({
           method: 'get',
-          url: `/labour/proInformation/allProInformations?pageNum=${parameter.pageNum - 1}&pageSize=10`
+          url: `/labour/labour/listLabourSerach?pageNum=${parameter.pageNum - 1}&pageSize=10`
         }).then(mork => {
           const totalCount = mork.total
           const parameters = {
@@ -186,18 +187,19 @@ export default {
           const next = (pageNo >= totalPage ? (totalCount % pageSize) : pageSize) + 1
           for (let i = 1; i < next; i++) {
             const tmpKey = key + i
-            var date = new Date(mork.list[i - 1].gmtCreate)
             result.push({
               key: tmpKey,
-              id: mork.list[i - 1].projectNum,
-              manager: mork.list[i - 1].proPersonnel.memberName,
-              tel: mork.list[i - 1].telephone,
-              no: 'No ' + tmpKey,
-              description: mork.list[i - 1].projectName,
-              callNo: 800,
-              number: mork.list[i - 1].labourNum,
-              status: mork.list[i - 1].state,
-              updatedAt: date.getFullYear() + '-' + date.getMonth() + '-' + date.getDate(),
+              id: mork.list[i - 1].labourNum,
+              name: mork.list[i - 1].labourName,
+              telenumber: mork.list[i - 1].telephone,
+              sorts: mork.list[i - 1].personnelType,
+              startTime: mork.list[i - 1].startTime,
+              date: mork.list[i - 1].personnelType,
+              idcard: mork.list[i - 1].cardNum,
+              money: mork.list[i - 1].salary,
+              salary: mork.list[i - 1].state,
+              timenum: mork.list[i - 1].workTime,
+              updatetime: mork.list[i - 1].workTime.gmtModified,
               editable: false
             })
           }
