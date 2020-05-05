@@ -167,7 +167,6 @@ export default {
           method: 'get',
           url: `/labour/proInformation/allProInformations?pageNum=${parameter.pageNum - 1}&pageSize=10`
         }).then(mork => {
-          console.log(mork)
           const totalCount = mork.total
           const parameters = {
             pageNo: mork.pageNum,
@@ -185,7 +184,7 @@ export default {
             result.push({
               key: mork.list[i - 1].projectId,
               id: mork.list[i - 1].projectNum,
-              manager: mork.list[i - 1].proPersonnel.memberName,
+              manager: mork.list[i - 1].proPersonnel === null ? '' : mork.list[i - 1].proPersonnel.memberName,
               tel: mork.list[i - 1].telephone,
               description: mork.list[i - 1].projectName,
               number: mork.list[i - 1].labourNum,
@@ -259,7 +258,6 @@ export default {
   },
   methods: {
     handleOk (value) {
-      console.log('hhhhhh')
       value.state = value.state === 0 ? '完成' : '未完成'
       value.gmtCreate = value.gmtCreate._d.getTime()
       axios({
@@ -285,16 +283,16 @@ export default {
     del (row) {
       this.$confirm({
         title: '警告',
-        content: `真的要删除 ${row.no} 吗?`,
+        content: `真的要删除 ${row.key} 吗?`,
         okText: '删除',
         okType: 'danger',
         cancelText: '取消',
         onOk () {
-          console.log(row.no)
+          console.log(row.key)
           // 在这里调用删除接口
           return axios({
             method: 'get',
-            url: `/labour/proInformation/deleteProInformation/${row.no.split(' ')[1]}`
+            url: `/labour/proInformation/deleteProInformation/${row.key}`
             // data: {
             //   projectId: row.no.split(' ')[1]
             // }
@@ -310,6 +308,16 @@ export default {
       })
     },
     save (row) {
+      row = {
+        projectName: row.description,
+        projectNum: row.id,
+        telephone: row.tel,
+        state: row.status,
+        labourNum: row.number,
+        gmtCreate: row.updatedAt,
+        projectId: row.key,
+        memberName: row.manager
+      }
       axios({
         method: 'post',
         url: `/labour/proInformation/updateProInformation`,

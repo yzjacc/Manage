@@ -1,28 +1,19 @@
 {
     "pageNum": 1,
-    "pageSize": 5,
-    "size": 5,
+    "pageSize": 10,
+    "size": 10,
     "startRow": 1,
-    "endRow": 5,
-    "total": 11,
-    "pages": 3,
+    "endRow": 10,
+    "total": 13,
+    "pages": 2,
     "list": [
         {
             "projectId": 1,
             "projectNum": "WW111",
             "projectName": "测试项目1",
-            "projectLocation": "广东省揭阳市揭西县",
-            "personnelId": 1,
-            "proPersonnel": {
-                "personnelId": 1,
-                "memberName": "张三",
-                "password": "123",
-                "post": "项目管理员",
-                "telephone": "1111111",
-                "gmtCreate": 1586275200000,
-                "gmtModified": 1587864575000,
-                "isDelete": 0
-            },
+            "projectLocation": null,
+            "personnelId": null,
+            "proPersonnel": null,
             "telephone": "12345678900",
             "state": "完成",
             "labourNum": 0,
@@ -205,10 +196,10 @@
                     "profession": null
                 }
             ],
-            "gmtCreate": 1586941915000,
-            "gmtModified": 1587862072000,
+            "gmtCreate": 1584201600000,
+            "gmtModified": 1588663746000,
             "gmtEnd": null,
-            "isDelete": 0
+            "isDelete": null
         },
         {
             "projectId": 2,
@@ -350,9 +341,9 @@
                 }
             ],
             "gmtCreate": 1586941915000,
-            "gmtModified": 1587862072000,
+            "gmtModified": 1588653482000,
             "gmtEnd": null,
-            "isDelete": 0
+            "isDelete": 1
         },
         {
             "projectId": 3,
@@ -425,6 +416,131 @@
             "labourNum": 0,
             "labInformations": [],
             "gmtCreate": 1586941915000,
+            "gmtModified": 1588653434000,
+            "gmtEnd": null,
+            "isDelete": 1
+        },
+        {
+            "projectId": 6,
+            "projectNum": "WW116",
+            "projectName": "测试项目6",
+            "projectLocation": "广东省揭阳市揭西县",
+            "personnelId": 1,
+            "proPersonnel": {
+                "personnelId": 1,
+                "memberName": "张三",
+                "password": "123",
+                "post": "项目管理员",
+                "telephone": "1111111",
+                "gmtCreate": 1586275200000,
+                "gmtModified": 1587864575000,
+                "isDelete": 0
+            },
+            "telephone": "12345678900",
+            "state": "未完成",
+            "labourNum": 0,
+            "labInformations": [],
+            "gmtCreate": 1586941915000,
+            "gmtModified": null,
+            "gmtEnd": null,
+            "isDelete": 0
+        },
+        {
+            "projectId": 7,
+            "projectNum": "WW117",
+            "projectName": "测试项目7",
+            "projectLocation": "广东省广州市天河区",
+            "personnelId": 1,
+            "proPersonnel": {
+                "personnelId": 1,
+                "memberName": "张三",
+                "password": "123",
+                "post": "项目管理员",
+                "telephone": "1111111",
+                "gmtCreate": 1586275200000,
+                "gmtModified": 1587864575000,
+                "isDelete": 0
+            },
+            "telephone": "12345678900",
+            "state": "未完成",
+            "labourNum": 0,
+            "labInformations": [],
+            "gmtCreate": 1586941915000,
+            "gmtModified": null,
+            "gmtEnd": null,
+            "isDelete": 0
+        },
+        {
+            "projectId": 8,
+            "projectNum": "WW118",
+            "projectName": "测试项目8",
+            "projectLocation": "广东省揭阳市揭西县",
+            "personnelId": 2,
+            "proPersonnel": {
+                "personnelId": 2,
+                "memberName": "李四",
+                "password": "1234567",
+                "post": "项目管理员",
+                "telephone": "12345678900",
+                "gmtCreate": 1587747149000,
+                "gmtModified": 1587864575000,
+                "isDelete": 0
+            },
+            "telephone": "12345678900",
+            "state": "未完成",
+            "labourNum": 0,
+            "labInformations": [],
+            "gmtCreate": 1586941915000,
+            "gmtModified": 1588653485000,
+            "gmtEnd": null,
+            "isDelete": 1
+        },
+        {
+            "projectId": 10,
+            "projectNum": "WW119",
+            "projectName": "测试项目9",
+            "projectLocation": "广东省深圳罗湖区",
+            "personnelId": 2,
+            "proPersonnel": {
+                "personnelId": 2,
+                "memberName": "李四",
+                "password": "1234567",
+                "post": "项目管理员",
+                "telephone": "12345678900",
+                "gmtCreate": 1587747149000,
+                "gmtModified": 1587864575000,
+                "isDelete": 0
+            },
+            "telephone": "12345678900",
+            "state": "未完成",
+            "labourNum": 0,
+            "labInformations": [],
+            "gmtCreate": 1586941915000,
+            "gmtModified": null,
+            "gmtEnd": null,
+            "isDelete": 0
+        },
+        {
+            "projectId": 11,
+            "projectNum": "WW110",
+            "projectName": "测试项目0",
+            "projectLocation": "广东省揭阳市揭西县",
+            "personnelId": 2,
+            "proPersonnel": {
+                "personnelId": 2,
+                "memberName": "李四",
+                "password": "1234567",
+                "post": "项目管理员",
+                "telephone": "12345678900",
+                "gmtCreate": 1587747149000,
+                "gmtModified": 1587864575000,
+                "isDelete": 0
+            },
+            "telephone": "12345678900",
+            "state": "完成",
+            "labourNum": 0,
+            "labInformations": [],
+            "gmtCreate": 1586941915000,
             "gmtModified": null,
             "gmtEnd": null,
             "isDelete": 0
@@ -439,11 +555,10 @@
     "navigatePages": 5,
     "navigatepageNums": [
         1,
-        2,
-        3
+        2
     ],
     "navigateFirstPage": 1,
-    "navigateLastPage": 3,
+    "navigateLastPage": 2,
     "firstPage": 1,
-    "lastPage": 3
+    "lastPage": 2
 }

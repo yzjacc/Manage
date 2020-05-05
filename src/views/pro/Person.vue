@@ -59,7 +59,7 @@
 import { STable } from '@/components'
 import { axios } from '../../utils/request'
 import { builder } from '../../mock/util'
-import CreateForm from './modules/MessCreateForm'
+import CreateForm from './modules/CreateForm'
 
 export default {
   name: 'TableList',
