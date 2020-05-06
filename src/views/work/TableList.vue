@@ -3,39 +3,38 @@
     <div class="table-page-search-wrapper">
       <a-form layout="inline">
         <a-row :gutter="48">
-          <a-col :md="8" :sm="24">
+          <a-col :md="6" :sm="24">
             <a-form-item label="姓名">
               <a-input v-model="queryParam.name" placeholder="请输入项目名称"/>
             </a-form-item>
           </a-col>
-          <a-col :md="8" :sm="24">
+          <!-- <a-col :md="6" :sm="24">
             <a-form-item label="手机号">
               <a-input v-model="queryParam.phone" placeholder="请输入项目编号"/>
             </a-form-item>
-          </a-col>
-          <a-col :md="8" :sm="24">
+          </a-col> -->
+          <!-- <a-col :md="8" :sm="24">
             <a-form-item label="状态">
               <a-select v-model="queryParam.status" placeholder="请选择" default-value="0">
                 <a-select-option value="0">未完成</a-select-option>
                 <a-select-option value="1">完成</a-select-option>
               </a-select>
             </a-form-item>
-          </a-col>
-          <a-col :md="6" :sm="24">
+          </a-col> -->
+          <!-- <a-col :md="6" :sm="24">
             <a-form-item label="上岗日期">
               <a-date-picker v-model="queryParam.dateStart" style="width: 100%" placeholder="开始时间"/>
             </a-form-item>
-          </a-col>
-          <a-col :md="4" :sm="24" style="margin-left:-30px">
+          </a-col> -->
+          <!-- <a-col :md="4" :sm="24" style="margin-left:-30px"> -->
             <!-- <a-form-item label="创建日期"> -->
-            <a-date-picker v-model="queryParam.dateEnd" style="width: 100%" placeholder="结束时间"/>
+            <!-- <a-date-picker v-model="queryParam.dateEnd" style="width: 100%" placeholder="结束时间"/> -->
             <!-- </a-form-item> -->
-          </a-col>
-          <a-col :md=" 14" :sm="24" style="margin-left:30px">
+          <!-- </a-col> -->
+          <a-col :md=" 5" :sm="24" style="margin-left:30px">
             <span class="table-page-search-submitButtons" :style="{ float: 'right', overflow: 'hidden' } || {} ">
-              <a-button type="primary" @click="$refs.table.refresh(true)">查询</a-button>
-              <a-button style="margin: 0 8px" @click="() => queryParam = {}">重置</a-button>
-              <a href="/labour/labour/outputExcel" download="文件名.xls"><a-button type="primary">导出</a-button></a>
+              <a-button type="primary" @click="$refs.table.refresh(true, {queryParam})">查询</a-button>
+              <a href="/labour/outputExcel" download="文件名.xls"><a-button style="margin: 0 8px">导出</a-button></a>
             </span>
           </a-col>
         </a-row>
@@ -44,23 +43,24 @@
 
     <div class="table-operator">
       <a-button type="primary" icon="plus" @click="$refs.createModal.add()">新建</a-button>
-      <a-dropdown v-if="selectedRowKeys.length > 0">
+      <!-- <a-dropdown v-if="selectedRowKeys.length > 0">
         <a-menu slot="overlay">
           <a-menu-item key="1"><a-icon type="delete" />删除</a-menu-item>
           <!-- lock | unlock -->
-          <a-menu-item key="2"><a-icon type="lock" />锁定</a-menu-item>
-        </a-menu>
+          <!-- <a-menu-item key="2"><a-icon type="lock" />锁定</a-menu-item>
+          </a-menu>
         <a-button style="margin-left: 8px">
           批量操作 <a-icon type="down" />
         </a-button>
-      </a-dropdown>
+      </a-dropdown>  -->
     </div>
 
     <s-table
       ref="table"
-      size="default"
+      size="small"
       :columns="columns"
       :data="loadData"
+      :search="search"
       :alert="{ show: true, clear: true }"
       :rowSelection="{ selectedRowKeys: this.selectedRowKeys, onChange: this.onSelectChange }"
     >
@@ -147,12 +147,12 @@ export default {
           scopedSlots: { customRender: 'idcard' }
         },
         {
-          title: '工资待遇(元/工日)',
+          title: '工资待遇',
           dataIndex: 'money',
           scopedSlots: { customRender: 'money' }
         },
         {
-          title: '工作时间(小时/天)',
+          title: '工作时间',
           dataIndex: 'timenum',
           scopedSlots: { customRender: 'timenum' }
         },
@@ -172,11 +172,11 @@ export default {
         console.log('loadData.parameter', parameter)
         return axios({
           method: 'get',
-          url: `/labour/labour/listLabourSerach?pageNum=${parameter.pageNum - 1}&pageSize=10`
+          url: `/labour/listLabourAll/0?pageSize=10`
         }).then(mork => {
-          const totalCount = mork.total
+          const totalCount = mork.size
           const parameters = {
-            pageNo: mork.pageNum,
+            pageNo: mork.pageNum - 1,
             pageSize: mork.pageSize
           }
           const result = []
@@ -194,12 +194,13 @@ export default {
               telenumber: mork.list[i - 1].telephone,
               sorts: mork.list[i - 1].personnelType,
               startTime: mork.list[i - 1].startTime,
-              date: mork.list[i - 1].personnelType,
+              date: mork.list[i - 1].startTime,
               idcard: mork.list[i - 1].cardNum,
               money: mork.list[i - 1].salary,
               salary: mork.list[i - 1].state,
-              timenum: mork.list[i - 1].workTime,
-              updatetime: mork.list[i - 1].workTime.gmtModified,
+              timenum: mork.list[i - 1].workTime + '小时',
+              moneycard: mork.list[i - 1].bankCard,
+              updatetime: mork.list[i - 1].gmtModified.substring(5, 10),
               editable: false
             })
           }
@@ -212,7 +213,56 @@ export default {
           })
         })
       },
-
+      search: parameter => {
+        parameter = {
+          pageNum: String(parameter.pageNum),
+          pageSize: String(parameter.pageSize),
+          labourName: parameter.queryParam.name
+          // projectNum: parameter.queryParam.projectNum,
+          // projectName: parameter.queryParam.projectName,
+          // state: parameter.queryParam.state
+        }
+        console.log('search', parameter)
+        return axios({
+          method: 'get',
+          url: `/labour/listLabourSerach`,
+          data: parameter
+        }).then(mork => {
+          const totalCount = mork.total
+          const parameters = {
+            pageNo: mork.pageNum - 1,
+            pageSize: mork.pageSize
+          }
+          const result = []
+          const pageNo = parseInt(parameters.pageNo)
+          const pageSize = parseInt(parameters.pageSize)
+          const totalPage = Math.ceil(totalCount / pageSize)
+          // const key = (pageNo - 1) * pageSize
+          const next = (pageNo >= totalPage ? (totalCount % pageSize) : pageSize) + 1
+          for (let i = 1; i < next; i++) {
+            // const tmpKey = key + i
+            var date = new Date(mork.list[i - 1].gmtCreate)
+            result.push({
+              key: mork.list[i - 1].projectId,
+              id: mork.list[i - 1].projectNum,
+              manager: mork.list[i - 1].proPersonnel === null ? '' : mork.list[i - 1].proPersonnel.memberName,
+              tel: mork.list[i - 1].telephone,
+              description: mork.list[i - 1].projectName,
+              number: mork.list[i - 1].labourNum,
+              status: mork.list[i - 1].state,
+              updatedAt: date.getFullYear() + '-' + date.getMonth() + '-' + date.getDate(),
+              editable: false
+            })
+          }
+          return builder({
+            pageSize: pageSize,
+            pageNo: pageNo,
+            totalCount: totalCount,
+            totalPage: totalPage,
+            data: result
+          })
+        })
+      },
       selectedRowKeys: [],
       selectedRows: []
     }

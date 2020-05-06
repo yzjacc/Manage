@@ -16,7 +16,7 @@
         >
           <a-input placeholder="请输入项目编号" v-model="par.projectNum"/>
           <a-input placeholder="请输入项目名称" v-model="par.projectName"/>
-          <a-input placeholder="请输入项目管理员ID" v-model="par.personnelId"/>
+          <a-input placeholder="请输入项目管理员ID" v-model="par.projectId"/>
           <a-input placeholder="请输入项目管理员联系方式" v-model="par.telephone"/>
           <!-- <a-input placeholder="请输入项目项目状态 完成/未完成"/> -->
           <a-select v-model="par.state" placeholder="请输入项目状态" >

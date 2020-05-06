@@ -4,7 +4,7 @@
       <a-form layout="inline">
         <a-row :gutter="48">
           <a-col :md="8" :sm="24">
-            <a-form-item label="姓名">
+            <a-form-item label="名">
               <a-input placeholder="请输入"/>
             </a-form-item>
           </a-col>
@@ -136,7 +136,8 @@
 
 <script>
 import { STable } from '@/components'
-
+import { axios } from '../../utils/request'
+import { builder } from '../../mock/util'
 export default {
   name: 'TableList',
   components: {
@@ -188,15 +189,47 @@ export default {
       permissionList: null,
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
-        return this.$http.get('/permission', {
-          params: Object.assign(parameter, this.queryParam)
-        }).then(res => {
-          const result = res.result
-          result.data.map(permission => {
-            permission.actionList = JSON.parse(permission.actionData)
-            return permission
+        console.log('loadData.parameter', parameter)
+        return axios({
+          method: 'get',
+          url: `/labour/listLabourAll/0?pageSize=10`
+        }).then(mork => {
+          const totalCount = mork.total
+          const parameters = {
+            pageNo: mork.pageNum,
+            pageSize: mork.pageSize
+          }
+          const result = []
+          const pageNo = parseInt(parameters.pageNo)
+          const pageSize = parseInt(parameters.pageSize)
+          const totalPage = Math.ceil(totalCount / pageSize)
+          // const key = (pageNo - 1) * pageSize
+          const next = (pageNo >= totalPage ? (totalCount % pageSize) : pageSize) + 1
+          for (let i = 1; i < next; i++) {
+            // const tmpKey = key + i
+            result.push({
+              // key: tmpKey,
+              // id: mork.list[i - 1].labourNum,
+              // name: mork.list[i - 1].labourName,
+              // telenumber: mork.list[i - 1].telephone,
+              // sorts: mork.list[i - 1].personnelType,
+              // startTime: mork.list[i - 1].startTime,
+              // date: mork.list[i - 1].personnelType,
+              // idcard: mork.list[i - 1].cardNum,
+              // money: mork.list[i - 1].salary,
+              // salary: mork.list[i - 1].state,
+              // timenum: mork.list[i - 1].workTime,
+              // updatetime: mork.list[i - 1].workTime.gmtModified,
+              // editable: false
+            })
+          }
+          return builder({
+            pageSize: pageSize,
+            pageNo: pageNo,
+            totalCount: totalCount,
+            totalPage: totalPage,
+            data: result
           })
-          return result
         })
       },
 
@@ -239,9 +272,9 @@ export default {
       console.log(this.mdl)
       this.visible = true
     },
-    handleOk () {
+    // handleOk () {
 
-    },
+    // },
     onChange (selectedRowKeys, selectedRows) {
       this.selectedRowKeys = selectedRowKeys
       this.selectedRows = selectedRows

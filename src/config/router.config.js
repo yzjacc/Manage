@@ -56,7 +56,7 @@ export const asyncRouterMap = [
           {
             path: '/form/worker-manage',
             name: 'Manage',
-            component: () => import('@/views/form/stepForm/Detail'),
+            component: () => import('@/views/work/CraftMange'),
             meta: { title: '工种管理', keepAlive: true, permission: [ 'form' ] }
           }
         ]
@@ -66,7 +66,7 @@ export const asyncRouterMap = [
       {
         path: '/list',
         name: 'list',
-        component: PageView,
+        component: RouteView,
         redirect: '/list/table-list',
         meta: { title: '考勤管理', icon: 'table', permission: [ 'table' ] },
         children: [
@@ -74,25 +74,25 @@ export const asyncRouterMap = [
             path: '/list/check-worker/:pageNo([1-9]\\d*)?',
             name: 'CheckWorker',
             hideChildrenInMenu: true, // 强制显示 MenuItem 而不是 SubMenu
-            component: () => import('@/views/list/TableList'),
+            component: () => import('@/views/kaoqin/TableList'),
             meta: { title: '考勤机管理', keepAlive: true, permission: [ 'table' ] }
           },
           {
             path: '/list/clock',
             name: 'Clock',
-            component: () => import('@/views/list/StandardList'),
+            component: () => import('@/views/kaoqin/StandardList'),
             meta: { title: '打卡记录', keepAlive: true, permission: [ 'table' ] },
             children: [
               {
                 path: '/list/search/article',
                 name: 'SearchArticles',
-                component: () => import('@/views/other/PermissionList'),
+                component: () => import('@/views/kaoqin/PermissionList'),
                 meta: { title: '日考勤', permission: [ 'table' ] }
               },
               {
                 path: '/list/search/project',
                 name: 'SearchProjects',
-                component: () => import('@/views/other/PermissionList'),
+                component: () => import('@/views/kaoqin/PermissionList'),
                 meta: { title: '月考勤', permission: [ 'table' ] }
               }
             ]
@@ -100,7 +100,7 @@ export const asyncRouterMap = [
           {
             path: '/list/card',
             name: 'Card',
-            component: () => import('@/views/list/CardList'),
+            component: () => import('@/views/kaoqin/CardList'),
             meta: { title: '补卡登记', keepAlive: true, permission: [ 'table' ] }
           },
           {
@@ -113,13 +113,13 @@ export const asyncRouterMap = [
               {
                 path: '/list/table/article',
                 name: 'SearchArticles',
-                component: () => import('@/views/other/RoleList'),
+                component: () => import('@/views/kaoqin/kaoqinribao'),
                 meta: { title: '考勤日报', permission: [ 'table' ] }
               },
               {
                 path: '/list/table/project',
                 name: 'SearchProjects',
-                component: () => import('@/views/other/Permission'),
+                component: () => import('@/views/kaoqin/Permission'),
                 meta: { title: '考勤月报', permission: [ 'table' ] }
               }
             ]

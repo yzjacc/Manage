@@ -14,7 +14,7 @@
           :labelCol="labelCol"
           :wrapperCol="wrapperCol"
         >
-          <a-input placeholder="请输入项目管理员ID" v-model="par.projectId"/>
+          <a-input placeholder="请输入项目管理员ID" v-model="par.personnelId"/>
           <a-input placeholder="请输入项目成员" v-model="par.projectName"/>
           <a-input placeholder="请输入项目岗位" v-model="par.telephone"/>
           <a-input placeholder="请输入项目联系方式" v-model="par.telephone"/>

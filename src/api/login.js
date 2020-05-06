@@ -22,7 +22,7 @@ import { builder } from '../mock/util'
 
 export function login (parameter) {
   return axios({
-    url: '/labour/userLogin',
+    url: '/userLogin',
     method: 'post',
     data: qs.stringify(parameter)
     // data: parameter
@@ -60,7 +60,7 @@ export function login (parameter) {
 
 export function getInfo () {
   return axios({
-    url: '/labour/userLogin',
+    url: '/userLogin',
     method: 'post',
     data: qs.stringify({
       password: 'admin',
@@ -410,7 +410,7 @@ export function getCurrentUserNav (token) {
 
 export function logout () {
   return axios({
-    url: '/labour/userLogout',
+    url: '/userLogout',
     method: 'get'
   })
 }

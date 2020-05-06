@@ -109,7 +109,7 @@ export default {
         console.log('loadData.parameter', parameter)
         return axios({
           method: 'get',
-          url: `/labour/proInformation/allProInformations?pageNum=${parameter.pageNum - 1}&pageSize=10`
+          url: `/proInformation/allProInformations?pageNum=${parameter.pageNum - 1}&pageSize=10`
         }).then(mork => {
           const totalCount = mork.total
           const parameters = {
@@ -120,25 +120,24 @@ export default {
           const pageNo = parseInt(parameters.pageNo)
           const pageSize = parseInt(parameters.pageSize)
           const totalPage = Math.ceil(totalCount / pageSize)
-          const key = (pageNo - 1) * pageSize
+          // const key = (pageNo - 1) * pageSize
           const next = (pageNo >= totalPage ? (totalCount % pageSize) : pageSize) + 1
           for (let i = 1; i < next; i++) {
-            const tmpKey = key + i
-            var date = new Date(mork.list[i - 1].proPersonnel.gmtModified)
-            result.push({
-              key: tmpKey,
-              id: mork.list[i - 1].projectId,
-              manage: mork.list[i - 1].proPersonnel.memberName,
-              tel: mork.list[i - 1].telephone,
-              no: mork.list[i - 1].proPersonnel.post,
-              description: mork.list[i - 1].projectName,
-              callNo: 800,
-              contact: mork.list[i - 1].proPersonnel.telephone,
-              number: mork.list[i - 1].labourNum,
-              status: mork.list[i - 1].state === '完成' ? 3 : 1,
-              updatedAt: date.getFullYear() + '-' + date.getMonth() + '-' + date.getDate(),
-              editable: false
-            })
+            // const tmpKey = key + i
+            if (mork.list[i - 1].proPersonnel !== null) {
+              var date = new Date(mork.list[i - 1].proPersonnel.gmtModified)
+              result.push({
+                // key: tmpKey,
+                id: mork.list[i - 1].projectId,
+                manage: mork.list[i - 1].proPersonnel.memberName,
+                tel: mork.list[i - 1].proPersonnel.telephone,
+                no: mork.list[i - 1].proPersonnel.post,
+                description: mork.list[i - 1].projectName,
+                contact: mork.list[i - 1].proPersonnel.telephone,
+                updatedAt: date.getFullYear() + '-' + date.getMonth() + '-' + date.getDate(),
+                editable: false
+              })
+            }
           }
           return builder({
             pageSize: pageSize,

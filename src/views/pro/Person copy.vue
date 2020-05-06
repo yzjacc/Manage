@@ -106,7 +106,7 @@ export default {
         console.log('loadData.parameter', parameter)
         return axios({
           method: 'get',
-          url: `/labour/proInformation/allProInformations?pageNum=${parameter.pageNum - 1}&pageSize=10`
+          url: `/proInformation/allProInformations?pageNum=${parameter.pageNum - 1}&pageSize=10`
         }).then(mork => {
           const totalCount = mork.total
           const parameters = {
