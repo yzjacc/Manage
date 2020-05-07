@@ -20,7 +20,7 @@
           </a-col> -->
           <a-col :md="8" :sm="24">
             <a-form-item label="设备ID">
-              <a-input placeholder="请输入设备ID" />
+              <a-input placeholder="请输入设备ID" v-model="queryParam.terminalId" />
             </a-form-item>
           </a-col>
           <a-col :md="!advanced && 8 || 24" :sm="24">
@@ -28,7 +28,7 @@
               class="table-page-search-submitButtons"
               :style="advanced && { float: 'right', overflow: 'hidden' } || {} "
             >
-              <a-button type="primary">查询</a-button>
+              <a-button type="primary" @click="$refs.table.refresh(true, {queryParam})">查询</a-button>
             </span>
           </a-col>
         </a-row>
@@ -39,6 +39,7 @@
       size="default"
       :columns="columns"
       :data="loadData"
+      :search="search"
       :alert="{ show: true, clear: true }"
       :rowSelection="{ selectedRowKeys: this.selectedRowKeys, onChange: this.onSelectChange }"
     >
@@ -133,7 +134,7 @@ export default {
         console.log('loadData.parameter', parameter)
         return axios({
           method: 'get',
-          url: `/labour/listLabourAll/0?pageSize=10`
+          url: `/terminal/selectTerminal?pageNum=${parameter.pageNum - 1}&pageSize=10`
         }).then(mork => {
           const totalCount = mork.total
           const parameters = {
@@ -144,23 +145,16 @@ export default {
           const pageNo = parseInt(parameters.pageNo)
           const pageSize = parseInt(parameters.pageSize)
           const totalPage = Math.ceil(totalCount / pageSize)
-          const key = (pageNo - 1) * pageSize
+          // const key = (pageNo - 1) * pageSize
           const next = (pageNo >= totalPage ? (totalCount % pageSize) : pageSize) + 1
           for (let i = 1; i < next; i++) {
-            const tmpKey = key + i
+            // const tmpKey = key + i
             result.push({
-              key: tmpKey,
-              id: mork.list[i - 1].labourNum,
-              name: mork.list[i - 1].labourName,
-              telenumber: mork.list[i - 1].telephone,
-              sorts: mork.list[i - 1].personnelType,
-              startTime: mork.list[i - 1].startTime,
-              date: mork.list[i - 1].personnelType,
-              idcard: mork.list[i - 1].cardNum,
-              money: mork.list[i - 1].salary,
-              salary: mork.list[i - 1].state,
-              timenum: mork.list[i - 1].workTime,
-              updatetime: mork.list[i - 1].workTime.gmtModified,
+              no: mork.list[i - 1].terminalId,
+              description: mork.list[i - 1].terminalAddress,
+              callNo: mork.list[i - 1].terminalType,
+              status: mork.list[i - 1].setScene,
+              updatedAt: mork.list[i - 1].setDate,
               editable: false
             })
           }
@@ -173,7 +167,48 @@ export default {
           })
         })
       },
-
+      search: parameter => {
+        console.log(parameter)
+        return axios({
+          method: 'get',
+          url: `/terminal/selectTerminal?pageNum=0&pageSize=10`,
+          data: parameter
+        }).then(mork => {
+          const totalCount = mork.total
+          const parameters = {
+            pageNo: mork.pageNum - 1,
+            pageSize: mork.pageSize
+          }
+          const result = []
+          const pageNo = parseInt(parameters.pageNo)
+          const pageSize = parseInt(parameters.pageSize)
+          const totalPage = Math.ceil(totalCount / pageSize)
+          // const key = (pageNo - 1) * pageSize
+          // const next = (pageNo >= totalPage ? (totalCount % pageSize) : pageSize) + 1
+          for (let i = 1; i <= mork.size; i++) {
+            // const tmpKey = key + i
+            var date = new Date(mork.list[i - 1].gmtCreate)
+            result.push({
+              key: mork.list[i - 1].projectId,
+              id: mork.list[i - 1].projectNum,
+              manager: mork.list[i - 1].proPersonnel === null ? '' : mork.list[i - 1].proPersonnel.memberName,
+              tel: mork.list[i - 1].telephone,
+              description: mork.list[i - 1].projectName,
+              number: mork.list[i - 1].labourNum,
+              status: mork.list[i - 1].state,
+              updatedAt: date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate(),
+              editable: false
+            })
+          }
+          return builder({
+            pageSize: pageSize,
+            pageNo: pageNo,
+            totalCount: totalCount,
+            totalPage: totalPage,
+            data: result
+          })
+        })
+      },
       selectedRowKeys: [],
       selectedRows: []
     }
@@ -182,6 +217,22 @@ export default {
     handleChange (value, key, column, record) {
       console.log(value, key, column)
       record[column.dataIndex] = value
+    },
+    handleOk (value) {
+      value.gmtCreate = value.gmtCreate._d.getFullYear() + '-' + (1 + value.gmtCreate._d.getMonth()) + '-' + value.gmtCreate._d.getDate()
+      if (value.state !== 0) {
+        if (value.state === 1) {
+          value.state = '完成'
+        } else {
+          value.state = '未完成'
+        }
+      } else delete value.state
+      return axios({
+        method: 'post',
+        url: `/proInformation/insertProInformation`
+      }).then(() => {
+        this.$refs.table.refresh(true)
+      })
     },
     edit (row) {
       row.editable = true

@@ -10,29 +10,28 @@
     <a-spin :spinning="confirmLoading">
       <a-form :form="form">
         <a-form-item
-          label="工种信息输入"
+          label="项目信息输入"
           :labelCol="labelCol"
           :wrapperCol="wrapperCol"
         >
-          <a-input placeholder="请输入工种名称" v-model="par.projectNum"/>
-          <a-input placeholder="请输入添加备注" v-model="par.projectName"/>
-          <a-date-picker style="width: 100%" placeholder="创建时间" v-model="par.gmtCreate"/>
-
-          <!-- <a-input placeholder="请输入项目管理员ID" v-model="par.projectId"/> -->
-          <!-- <a-input placeholder="请输入项目管理员联系方式" v-model="par.telephone"/> -->
+          <a-input placeholder="请输入项目编号" v-model="par.projectNum"/>
+          <a-input placeholder="请输入项目名称" v-model="par.projectName"/>
+          <a-input placeholder="请输入项目管理员ID" v-model="par.projectId"/>
+          <a-input placeholder="请输入项目管理员联系方式" v-model="par.telephone"/>
           <!-- <a-input placeholder="请输入项目项目状态 完成/未完成"/> -->
-          <!-- <a-select v-model="par.state" placeholder="请输入项目状态" > -->
-            <!-- <a-select-option value="0">已完成</a-select-option> -->
-            <!-- <a-select-option value="1">未完成</a-select-option> -->
+          <a-select v-model="par.state" placeholder="请输入项目状态" >
+            <a-select-option value="0">已完成</a-select-option>
+            <a-select-option value="1">未完成</a-select-option>
             <!-- <a-select-option value="2"></a-select-option> -->
-          <!-- </a-select> -->
-          <!-- <a-input placeholder="请输入项目劳工数" v-model="par.labourNum"/> -->
+          </a-select>
+          <a-input placeholder="请输入项目劳工数" v-model="par.labourNum"/>
           <!-- <a-input placeholder="请输入项目创建时间"/> -->
           <!-- <a-input placeholder="请输入项目归属"/> -->
           <!-- <a-select v-model="one" placeholder="请输入项目有无分包">
             <a-select-option value="0">有</a-select-option>
             <a-select-option value="1">无</a-select-option>
           </a-select> -->
+          <a-date-picker style="width: 100%" placeholder="创建时间" v-model="par.gmtCreate"/>
         </a-form-item>
       </a-form>
     </a-spin>

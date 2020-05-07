@@ -86,13 +86,13 @@ export const asyncRouterMap = [
               {
                 path: '/list/search/article',
                 name: 'SearchArticles',
-                component: () => import('@/views/kaoqin/PermissionList'),
+                component: () => import('@/views/kaoqin/PermissionRi'),
                 meta: { title: '日考勤', permission: [ 'table' ] }
               },
               {
                 path: '/list/search/project',
                 name: 'SearchProjects',
-                component: () => import('@/views/kaoqin/PermissionList'),
+                component: () => import('@/views/kaoqin/PermissionYue'),
                 meta: { title: '月考勤', permission: [ 'table' ] }
               }
             ]

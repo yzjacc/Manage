@@ -1,18 +1,27 @@
 <template>
   <a-card :bordered="false">
-
-    <div class="table-operator">
-      <a-button type="primary" icon="plus" @click="$refs.createModal.add()">新建</a-button>
-      <a-dropdown v-if="selectedRowKeys.length > 0">
-        <a-menu slot="overlay">
-          <a-menu-item key="1"><a-icon type="delete" />删除</a-menu-item>
-          <!-- lock | unlock -->
-          <a-menu-item key="2"><a-icon type="lock" />锁定</a-menu-item>
-        </a-menu>
-        <a-button style="margin-left: 8px">
-          批量操作 <a-icon type="down" />
-        </a-button>
-      </a-dropdown>
+    <div class="table-page-search-wrapper">
+      <a-form layout="inline">
+        <a-row :gutter="48">
+          <a-col :md="10" :sm="24">
+            <a-form-item label="项目ID" >
+              <a-input placeholder="请输入项目ID" v-model="queryParam.projectId" />
+            </a-form-item>
+          </a-col>
+          <!-- <a-col :md="8" :sm="24">
+            <a-form-item label="创建日期">
+              <a-date-picker v-model="queryParam.date" style="width: 100%" placeholder="请输入创建日期"/>
+            </a-form-item>
+          </a-col> -->
+          <a-col :md="!advanced && 8 || 24" :sm="24">
+            <span class="table-page-search-submitButtons" :style="advanced && { float: 'right', overflow: 'hidden' } || {} ">
+              <a-button type="primary" @click="$refs.table.refresh(true, {queryParam})">查询</a-button>
+              <a-button style="margin: 0 8px" @click="() => queryParam = {}">重置</a-button>
+              <a-button type="primary" icon="plus" @click="$refs.createModal.add()">新建</a-button>
+            </span>
+          </a-col>
+        </a-row>
+      </a-form>
     </div>
 
     <s-table
@@ -20,6 +29,7 @@
       size="default"
       :columns="columns"
       :data="loadData"
+      :search="search"
       :alert="{ show: true, clear: true }"
       :rowSelection="{ selectedRowKeys: this.selectedRowKeys, onChange: this.onSelectChange }"
     >
@@ -60,6 +70,7 @@ import { STable } from '@/components'
 import { axios } from '../../utils/request'
 import { builder } from '../../mock/util'
 import CreateForm from './modules/CreateForm'
+import qs from 'qs'
 
 export default {
   name: 'TableList',
@@ -76,6 +87,10 @@ export default {
       // 表头
       columns: [
         {
+          title: '项目管理员ID',
+          dataIndex: 'personnelId'
+        },
+        {
           title: '项目成员',
           dataIndex: 'manage',
           scopedSlots: { customRender: 'manage' }
@@ -91,7 +106,11 @@ export default {
           dataIndex: 'contact',
           scopedSlots: { customRender: 'contact' }
         },
-
+        {
+          title: '密码',
+          dataIndex: 'password',
+          scopedSlots: { customRender: 'password' }
+        },
         {
           title: '更新时间',
           dataIndex: 'updatedAt',
@@ -106,10 +125,16 @@ export default {
       ],
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
-        console.log('loadData.parameter', parameter)
+        let id = 1
+        console.log('loadData.parameter', this.queryParam.projectId)
+        if (this.queryParam.projectId !== undefined) id = this.queryParam.projectId
         return axios({
           method: 'get',
-          url: `/proInformation/allProInformations?pageNum=${parameter.pageNum - 1}&pageSize=10`
+          url: `/proPersonnel/allProPersonnels/${id}`
+          // data: qs.stringify({
+          //   pageNum: parameter.pageNum,
+          //   pageSize: 10
+          // })
         }).then(mork => {
           const totalCount = mork.total
           const parameters = {
@@ -121,20 +146,20 @@ export default {
           const pageSize = parseInt(parameters.pageSize)
           const totalPage = Math.ceil(totalCount / pageSize)
           // const key = (pageNo - 1) * pageSize
-          const next = (pageNo >= totalPage ? (totalCount % pageSize) : pageSize) + 1
-          for (let i = 1; i < next; i++) {
+          // const next = (pageNo >= totalPage ? (totalCount % pageSize) : pageSize) + 1
+          for (let i = 1; i <= mork.size; i++) {
             // const tmpKey = key + i
             if (mork.list[i - 1].proPersonnel !== null) {
-              var date = new Date(mork.list[i - 1].proPersonnel.gmtModified)
+              // var date = new Date(mork.list[i - 1].proPersonnel.gmtModified)
               result.push({
                 // key: tmpKey,
-                id: mork.list[i - 1].projectId,
-                manage: mork.list[i - 1].proPersonnel.memberName,
-                tel: mork.list[i - 1].proPersonnel.telephone,
-                no: mork.list[i - 1].proPersonnel.post,
-                description: mork.list[i - 1].projectName,
-                contact: mork.list[i - 1].proPersonnel.telephone,
-                updatedAt: date.getFullYear() + '-' + date.getMonth() + '-' + date.getDate(),
+                personnelId: mork.list[i - 1].personnelId === undefined ? '' : mork.list[i - 1].personnelId,
+                manage: mork.list[i - 1].memberName === undefined ? '' : mork.list[i - 1].memberName,
+                no: mork.list[i - 1].post === undefined ? '' : mork.list[i - 1].post,
+                contact: mork.list[i - 1].telephone === undefined ? '' : mork.list[i - 1].telephone,
+                password: mork.list[i - 1].password === undefined ? '' : mork.list[i - 1].password,
+                updatedAt: mork.list[i - 1].gmtModified === undefined ? '' : mork.list[i - 1].gmtModified,
+                // updatedAt: date.getFullYear() + '-' + date.getMonth() + '-' + date.getDate(),
                 editable: false
               })
             }
@@ -148,13 +173,64 @@ export default {
           })
         })
       },
-
+      search: parameter => {
+        console.log(parameter)
+        return axios({
+          method: 'get',
+          url: `/proPersonnel/allProPersonnels/${parameter.queryParam.projectId}`
+        }).then(mork => {
+          const totalCount = mork.total
+          const parameters = {
+            pageNo: mork.pageNum,
+            pageSize: mork.pageSize
+          }
+          const result = []
+          const pageNo = parseInt(parameters.pageNo)
+          const pageSize = parseInt(parameters.pageSize)
+          const totalPage = Math.ceil(totalCount / pageSize)
+          // const key = (pageNo - 1) * pageSize
+          // const next = (pageNo >= totalPage ? (totalCount % pageSize) : pageSize) + 1
+          for (let i = 1; i <= mork.size; i++) {
+            // const tmpKey = key + i
+            if (mork.list[i - 1].proPersonnel !== null) {
+              // var date = new Date(mork.list[i - 1].proPersonnel.gmtModified)
+              result.push({
+                // key: tmpKey,
+                personnelId: mork.list[i - 1].personnelId === undefined ? '' : mork.list[i - 1].personnelId,
+                manage: mork.list[i - 1].memberName === undefined ? '' : mork.list[i - 1].memberName,
+                no: mork.list[i - 1].post === undefined ? '' : mork.list[i - 1].post,
+                contact: mork.list[i - 1].telephone === undefined ? '' : mork.list[i - 1].telephone,
+                password: mork.list[i - 1].password === undefined ? '' : mork.list[i - 1].password,
+                updatedAt: mork.list[i - 1].gmtModified === undefined ? '' : mork.list[i - 1].gmtModified,
+                // updatedAt: date.getFullYear() + '-' + date.getMonth() + '-' + date.getDate(),
+                editable: false
+              })
+            }
+          }
+          return builder({
+            pageSize: pageSize,
+            pageNo: pageNo,
+            totalCount: totalCount,
+            totalPage: totalPage,
+            data: result
+          })
+        })
+      },
       selectedRowKeys: [],
       selectedRows: []
     }
   },
   methods: {
-
+    handleOk (value) {
+      value.gmtCreate = value.gmtCreate._d.getFullYear() + '-' + (1 + value.gmtCreate._d.getMonth()) + '-' + value.gmtCreate._d.getDate()
+      return axios({
+        method: 'post',
+        url: `/proPersonnel/insertProPersonnel`,
+        data: qs.stringify(value)
+      }).then(() => {
+        this.$refs.table.refresh(true)
+      })
+    },
     handleChange (value, key, column, record) {
       console.log(value, key, column)
       record[column.dataIndex] = value
@@ -184,7 +260,22 @@ export default {
       })
     },
     save (row) {
-      console.log(row, 'ss')
+      row = {
+        personnelId: row.personnelId,
+        memberName: row.manage,
+        post: row.no,
+        telephone: row.contact,
+        password: row.password,
+        gmtModified: new Date(row.updatedAt).getFullYear() + '-' + (new Date(row.updatedAt).getMonth() + 1) + '-' + new Date(row.updatedAt).getDate()
+      }
+      console.log('row', row)
+      axios({
+        method: 'post',
+        url: `/proInformation/updateProInformation`,
+        data: qs.stringify(row)
+      }).then(() => {
+        this.$refs.table.refresh(true)
+      })
       row.editable = false
       this.$refs.table.refresh(true)
     },

@@ -42,7 +42,7 @@
     </div>
 
     <div class="table-operator">
-      <a-button type="primary" icon="plus" @click="$refs.createModal.add()">新建</a-button>
+      <a-button type="primary" icon="plus" @click="add()">新建</a-button>
       <!-- <a-dropdown v-if="selectedRowKeys.length > 0">
         <a-menu slot="overlay">
           <a-menu-item key="1"><a-icon type="delete" />删除</a-menu-item>
@@ -100,13 +100,13 @@
 import { STable } from '@/components'
 import { axios } from '../../utils/request'
 import { builder } from '../../mock/util'
-// import CreateForm from './modules/MessCreateForm'
+import CreateForm from './modules/MessCreateForm'
 
 export default {
   name: 'TableList',
   components: {
-    STable
-    // CreateForm
+    STable,
+    CreateForm
   },
   data () {
     return {
@@ -215,8 +215,8 @@ export default {
       },
       search: parameter => {
         parameter = {
-          pageNum: String(parameter.pageNum),
-          pageSize: String(parameter.pageSize),
+          pageNum: 1,
+          pageSize: 10,
           labourName: parameter.queryParam.name
           // projectNum: parameter.queryParam.projectNum,
           // projectName: parameter.queryParam.projectName,
@@ -268,7 +268,9 @@ export default {
     }
   },
   methods: {
-
+    add () {
+      return this.$confirm(CreateForm)
+    },
     handleChange (value, key, column, record) {
       console.log(value, key, column)
       record[column.dataIndex] = value

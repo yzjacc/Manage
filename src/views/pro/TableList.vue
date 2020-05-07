@@ -119,6 +119,11 @@ export default {
       // 表头
       columns: [
         {
+          title: '项目ID',
+          dataIndex: 'key',
+          scopedSlots: { customRender: 'key' }
+        },
+        {
           title: '项目编号',
           dataIndex: 'id',
           scopedSlots: { customRender: 'id' }
@@ -166,27 +171,31 @@ export default {
       loadData: parameter => {
         console.log('loadData.parameter', parameter)
         return axios({
-          method: 'get',
-          url: `/proInformation/allProInformations?pageNum=${parameter.pageNum - 1}&pageSize=10`
+          method: 'post',
+          url: `proInformation/getProInformationsByCondition`,
+          data: qs.stringify({
+            pageNum: parameter.pageNum,
+            pageSize: 10
+          })
         }).then(mork => {
           const totalCount = mork.total
           const parameters = {
             pageNo: mork.pageNum,
-            pageSize: mork.pageSize
+            pageSize: 10
           }
           const result = []
           const pageNo = parseInt(parameters.pageNo)
           const pageSize = parseInt(parameters.pageSize)
           const totalPage = Math.ceil(totalCount / pageSize)
           // const key = (pageNo - 1) * pageSize
-          const next = (pageNo >= totalPage ? (totalCount % pageSize) : pageSize) + 1
-          for (let i = 1; i < next; i++) {
+          // const next = (pageNo >= totalPage ? (totalCount % pageSize) : pageSize) + 1
+          for (let i = 1; i <= mork.size; i++) {
             // const tmpKey = key + i
             var date = new Date(mork.list[i - 1].gmtCreate)
             result.push({
               key: mork.list[i - 1].projectId,
               id: mork.list[i - 1].projectNum,
-              manager: mork.list[i - 1].proPersonnel === null ? '' : mork.list[i - 1].proPersonnel.memberName,
+              manager: mork.list[i - 1].proPersonnels[0] === undefined ? '' : mork.list[i - 1].proPersonnels[0].memberName,
               tel: mork.list[i - 1].telephone,
               description: mork.list[i - 1].projectName,
               number: mork.list[i - 1].labourNum,
@@ -298,7 +307,7 @@ export default {
       console.log(this.$confirm)
       this.$confirm({
         title: '警告',
-        content: `真的要删除 ${row.key} 吗?`,
+        content: `真的要删除 ${row.description} 吗?`,
         okText: '删除',
         okType: 'danger',
         cancelText: '取消',

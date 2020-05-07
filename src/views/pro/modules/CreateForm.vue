@@ -14,10 +14,11 @@
           :labelCol="labelCol"
           :wrapperCol="wrapperCol"
         >
-          <a-input placeholder="请输入项目管理员ID" v-model="par.personnelId"/>
-          <a-input placeholder="请输入项目成员" v-model="par.projectName"/>
-          <a-input placeholder="请输入项目岗位" v-model="par.telephone"/>
-          <a-input placeholder="请输入项目联系方式" v-model="par.telephone"/>
+          <a-input placeholder="请输入项目ID" v-model="par.projectId"/>
+          <a-input placeholder="请输入项目人员姓名" v-model="par.memberName"/>
+          <a-input placeholder="请输入项目人员岗位" v-model="par.post"/>
+          <a-input placeholder="请输入项目人员联系方式" v-model="par.telephone"/>
+          <a-input placeholder="请输入项目人员密码" v-model="par.password"/>
           <!-- <a-input placeholder="请输入项目项目状态 完成/未完成"/> -->
           <!-- <a-select v-model="par.state" placeholder="请输入项目状态" >
             <a-select-option value="0">已完成</a-select-option>

@@ -24,8 +24,8 @@
             </a-col>
             <a-col :md="8" :sm="24">
               <a-form-item label="性别">
-                <input type="radio" name="radios" value="1" v-model="sex"><label>男</label>&nbsp;
-                <input type="radio" name="radios" value="0" v-model="sex"><label>女</label>
+                <input type="radio" name="radios" value="1" v-model="sex"><label>&nbsp;男&nbsp;&nbsp;</label>&nbsp;
+                <input type="radio" name="radios" value="0" v-model="sex"><label>&nbsp;女</label>
               </a-form-item>
             </a-col>
             <a-col :md="8" :sm="24">
@@ -35,7 +35,8 @@
             </a-col>
             <a-col :md="8" :sm="12">
               <a-form-item label="证件有效期">
-                <a-date-picker v-model="queryParam.date1" style="width: 40%" :sm="11"/>-<a-date-picker v-model="queryParam.date2" style="width: 40%" :sm="2"/>
+                <a-date-picker v-model="queryParam.date1" placeholder="" style="width: 50%" :sm="11"/>
+                <a-date-picker v-model="queryParam.date2" placeholder="" style="width: 50%" :sm="11"/>
               </a-form-item>
             </a-col>
             <a-col :md="8" :sm="24">
@@ -56,7 +57,7 @@
             </a-col>
             <a-col :md="8" :sm="24">
               <a-form-item label="出生日期">
-                <a-date-picker v-model="queryParam.birth" style="width: 100%" placeholder=""/>
+                <a-date-picker v-model="queryParam.birth" style="width: 100%"/>
               </a-form-item>
             </a-col>
             <a-col :md="8" :sm="24">
@@ -71,12 +72,12 @@
             <a-col :md="8" :sm="24">
               <a-form-item label="政治面貌">
                 <a-select v-model="queryParam.able" placeholder="请选择" default-value="0">
-                  <a-select-option value="0">群众</a-select-option>
-                  <a-select-option value="1">少先队员</a-select-option>
-                  <a-select-option value="2">团员</a-select-option>
-                  <a-select-option value="3">入党积极分子</a-select-option>
-                  <a-select-option value="4">预备党员</a-select-option>
-                  <a-select-option value="5">党员</a-select-option>
+                  <a-select-option value="群众">群众</a-select-option>
+                  <a-select-option value="少先队员">少先队员</a-select-option>
+                  <a-select-option value="团员">团员</a-select-option>
+                  <a-select-option value="入党积极分子">入党积极分子</a-select-option>
+                  <a-select-option value="预备党员">预备党员</a-select-option>
+                  <a-select-option value="党员">党员</a-select-option>
                 </a-select>
               </a-form-item>
             </a-col>
@@ -113,8 +114,8 @@
             </a-col>
             <a-col :md="8" :sm="24">
               <a-form-item label="是否需要签到">
-                <input type="radio" name="radios" value="1" v-model="need"><label>需要</label>&nbsp;
-                <input type="radio" name="radios" value="0" v-model="need"><label>不需要</label>
+                <input type="radio" name="radios" value="1" v-model="need"><label>&nbsp;需要&nbsp;</label>&nbsp;
+                <input type="radio" name="radios" value="0" v-model="need"><label>&nbsp;不需要</label>
               </a-form-item>
             </a-col>
             <a-col :md="8" :sm="24">
@@ -154,8 +155,8 @@
             </a-col>
             <a-col :md="8" :sm="24">
               <a-form-item label="合同起止时间">
-                <a-date-picker v-model="queryParam.date" style="width: 40%" placeholder="开始时间"/>-
-                <a-date-picker v-model="queryParam.date" style="width: 40%" placeholder="结束时间"/>
+                <a-date-picker v-model="queryParam.date" style="width: 50%" placeholder=""/>
+                <a-date-picker v-model="queryParam.date" style="width: 50%" placeholder=""/>
               </a-form-item>
             </a-col>
             <a-col :md="8" :sm="24">
@@ -196,7 +197,7 @@
           </a-row>
         </a-form>
       </div>
-      <create-form ref="createModal" @ok="handleOk" />
+      <!-- <create-form ref="createModal" @ok="handleOk" /> -->
       <step-by-step-modal ref="modal" @ok="handleOk"/>
     </a-card>
   </page-view>
@@ -205,8 +206,8 @@
 <script>
 import moment from 'moment'
 import { STable, Ellipsis } from '@/components'
-import StepByStepModal from '@/views/list/modules/StepByStepModal'
-import CreateForm from '@/views/list/modules/CreateForm'
+// import StepByStepModal from '@/views/list/modules/StepByStepModal'
+import CreateForm from '@/views/pro/modules/CreateForm'
 import { getRoleList, getServiceList } from '@/api/manage'
 
 export default {
@@ -214,8 +215,8 @@ export default {
   components: {
     STable,
     Ellipsis,
-    CreateForm,
-    StepByStepModal
+    CreateForm
+    // StepByStepModal
   },
   data () {
     return {
