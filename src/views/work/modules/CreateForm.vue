@@ -14,6 +14,12 @@
           :labelCol="labelCol"
           :wrapperCol="wrapperCol"
         >
+
+          <a-col :md="8" :sm="24">
+              <a-form-item label="身份证号">
+               <a-input v-model="queryParam.name" placeholder=""/>
+            </a-form-item>
+          </a-col>
           <a-input placeholder="请输入项目人员ID" v-model="par.projectId"/>
           <a-input placeholder="请输入项目人员姓名" v-model="par.memberName"/>
           <a-input placeholder="请输入项目人员岗位" v-model="par.post"/>

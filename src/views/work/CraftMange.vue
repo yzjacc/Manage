@@ -117,7 +117,7 @@ export default {
         console.log('loadData.parameter', parameter)
         return axios({
           method: 'get',
-          url: `/labour/listLabourWork/`
+          url: `/labour/listLabourWork`
         }).then(mork => {
           const totalCount = mork.total
           const parameters = {

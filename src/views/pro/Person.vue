@@ -159,6 +159,7 @@ export default {
                 contact: mork.list[i - 1].telephone === undefined ? '' : mork.list[i - 1].telephone,
                 password: mork.list[i - 1].password === undefined ? '' : mork.list[i - 1].password,
                 updatedAt: mork.list[i - 1].gmtModified === undefined ? '' : mork.list[i - 1].gmtModified,
+                gmtCreate: mork.list[i - 1].gmtCreate === undefined ? '' : mork.list[i - 1].gmtCreate,
                 // updatedAt: date.getFullYear() + '-' + date.getMonth() + '-' + date.getDate(),
                 editable: false
               })
@@ -202,6 +203,7 @@ export default {
                 contact: mork.list[i - 1].telephone === undefined ? '' : mork.list[i - 1].telephone,
                 password: mork.list[i - 1].password === undefined ? '' : mork.list[i - 1].password,
                 updatedAt: mork.list[i - 1].gmtModified === undefined ? '' : mork.list[i - 1].gmtModified,
+                gmtCreate: mork.list[i - 1].gmtCreate === undefined ? '' : mork.list[i - 1].gmtCreate,
                 // updatedAt: date.getFullYear() + '-' + date.getMonth() + '-' + date.getDate(),
                 editable: false
               })
@@ -243,16 +245,20 @@ export default {
     del (row) {
       this.$confirm({
         title: '警告',
-        content: `真的要删除 ${row.no} 吗?`,
+        content: `真的要删除 ${row.manage} 吗?`,
         okText: '删除',
         okType: 'danger',
         cancelText: '取消',
         onOk () {
           console.log('OK')
           // 在这里调用删除接口
-          return new Promise((resolve, reject) => {
-            setTimeout(Math.random() > 0.5 ? resolve : reject, 1000)
-          }).catch(() => console.log('Oops errors!'))
+          return axios({
+            method: 'post',
+            url: `/proPersonnel/deleteProPersonnel/${row.personnelId}`
+            // data: {
+            //   projectId: row.no.split(' ')[1]
+            // }
+          })
         },
         onCancel () {
           console.log('Cancel')
@@ -260,18 +266,20 @@ export default {
       })
     },
     save (row) {
+      console.log(row.gmtCreate)
       row = {
         personnelId: row.personnelId,
         memberName: row.manage,
         post: row.no,
         telephone: row.contact,
         password: row.password,
-        gmtModified: new Date(row.updatedAt).getFullYear() + '-' + (new Date(row.updatedAt).getMonth() + 1) + '-' + new Date(row.updatedAt).getDate()
+        gmtModified: new Date(row.updatedAt).getFullYear() + '-' + (new Date(row.updatedAt).getMonth() + 1) + '-' + new Date(row.updatedAt).getDate(),
+        gmtCreate: new Date(row.gmtCreate).getFullYear() + '-' + (new Date(row.gmtCreate).getMonth() + 1) + '-' + new Date(row.gmtCreate).getDate()
       }
       console.log('row', row)
       axios({
         method: 'post',
-        url: `/proInformation/updateProInformation`,
+        url: `/proPersonnel/updateProPersonnel`,
         data: qs.stringify(row)
       }).then(() => {
         this.$refs.table.refresh(true)

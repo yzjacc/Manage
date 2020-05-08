@@ -42,7 +42,7 @@
     </div>
 
     <div class="table-operator">
-      <a-button type="primary" icon="plus" @click="add()">新建</a-button>
+      <a-button type="primary" icon="plus" @click="$refs.createModal.add()">新建</a-button>
       <!-- <a-dropdown v-if="selectedRowKeys.length > 0">
         <a-menu slot="overlay">
           <a-menu-item key="1"><a-icon type="delete" />删除</a-menu-item>
@@ -92,7 +92,7 @@
         </div>
       </template>
     </s-table>
-    <!-- <create-form ref="createModal" @ok="handleOk" /> -->
+    <create-form ref="createModal" @ok="handleOk" />
   </a-card>
 </template>
 

@@ -4,6 +4,11 @@
       <a-form layout="inline">
         <a-row :gutter="48">
           <a-col :md="8" :sm="24">
+            <a-form-item label="项目ID" >
+              <a-input placeholder="请输入项目ID" v-model="queryParam.projectId" />
+            </a-form-item>
+          </a-col>
+          <a-col :md="8" :sm="24">
             <a-form-item label="姓名">
               <a-input placeholder="请输入"/>
             </a-form-item>
@@ -167,11 +172,13 @@ export default {
       columns: [
         {
           title: '日期',
-          dataIndex: 'id'
+          dataIndex: 'date',
+          scopedSlots: { customRender: 'date' }
         },
         {
           title: '姓名',
-          dataIndex: 'name'
+          dataIndex: 'name',
+          scopedSlots: { customRender: 'name' }
         },
         {
           title: '打卡记录',
@@ -192,7 +199,7 @@ export default {
         console.log('loadData.parameter', parameter)
         return axios({
           method: 'get',
-          url: `attendanceRecord/getAttendanceRecordsByConditions/0?pageSize=10`
+          url: `attendanceRecord/getAttendanceRecordsByConditions?projectId=1&pageSize=10`
         }).then(mork => {
           const totalCount = mork.total
           const parameters = {
@@ -204,23 +211,13 @@ export default {
           const pageSize = parseInt(parameters.pageSize)
           const totalPage = Math.ceil(totalCount / pageSize)
           // const key = (pageNo - 1) * pageSize
-          const next = (pageNo >= totalPage ? (totalCount % pageSize) : pageSize) + 1
-          for (let i = 1; i < next; i++) {
+          // const next = (pageNo >= totalPage ? (totalCount % pageSize) : pageSize) + 1
+          for (let i = 1; i <= mork.size; i++) {
             // const tmpKey = key + i
             result.push({
-              // key: tmpKey,
-              // id: mork.list[i - 1].labourNum,
-              // name: mork.list[i - 1].labourName,
-              // telenumber: mork.list[i - 1].telephone,
-              // sorts: mork.list[i - 1].personnelType,
-              // startTime: mork.list[i - 1].startTime,
-              // date: mork.list[i - 1].personnelType,
-              // idcard: mork.list[i - 1].cardNum,
-              // money: mork.list[i - 1].salary,
-              // salary: mork.list[i - 1].state,
-              // timenum: mork.list[i - 1].workTime,
-              // updatetime: mork.list[i - 1].workTime.gmtModified,
-              // editable: false
+              date: mork.list[i - 1].passTime,
+              name: mork.list[i - 1].name,
+              status: mork.list[i - 1].status
             })
           }
           return builder({
