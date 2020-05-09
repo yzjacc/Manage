@@ -134,7 +134,7 @@ export default {
         console.log('loadData.parameter', parameter)
         return axios({
           method: 'get',
-          url: `/terminal/selectTerminal?pageNum=${parameter.pageNum - 1}&pageSize=10`
+          url: `/terminal/selectTerminal?pageNum=${parameter.pageNum}&pageSize=10`
         }).then(mork => {
           const totalCount = mork.total
           const parameters = {
@@ -168,12 +168,19 @@ export default {
         })
       },
       search: parameter => {
+        parameter = {
+          terminalId: parameter.queryParam.terminalId,
+          pageNum: parameter.pageNum,
+          pageSize: 10
+        }
         console.log(parameter)
+
         return axios({
           method: 'get',
-          url: `/terminal/selectTerminal?pageNum=0&pageSize=10`,
+          url: `/terminal/selectTerminal?terminalId=${parameter.terminalId}&pageNum=1&pageSize=10`,
           data: parameter
         }).then(mork => {
+          console.log(mork)
           const totalCount = mork.total
           const parameters = {
             pageNo: mork.pageNum - 1,
@@ -184,19 +191,16 @@ export default {
           const pageSize = parseInt(parameters.pageSize)
           const totalPage = Math.ceil(totalCount / pageSize)
           // const key = (pageNo - 1) * pageSize
-          // const next = (pageNo >= totalPage ? (totalCount % pageSize) : pageSize) + 1
-          for (let i = 1; i <= mork.size; i++) {
+          const next = (pageNo >= totalPage ? (totalCount % pageSize) : pageSize) + 1
+          for (let i = 1; i < next; i++) {
             // const tmpKey = key + i
-            var date = new Date(mork.list[i - 1].gmtCreate)
+            // var date = new Date(mork.list[i - 1].gmtCreate)
             result.push({
-              key: mork.list[i - 1].projectId,
-              id: mork.list[i - 1].projectNum,
-              manager: mork.list[i - 1].proPersonnel === null ? '' : mork.list[i - 1].proPersonnel.memberName,
-              tel: mork.list[i - 1].telephone,
-              description: mork.list[i - 1].projectName,
-              number: mork.list[i - 1].labourNum,
-              status: mork.list[i - 1].state,
-              updatedAt: date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate(),
+              no: mork.list[i - 1].terminalId,
+              description: mork.list[i - 1].terminalAddress,
+              callNo: mork.list[i - 1].terminalType,
+              status: mork.list[i - 1].setScene,
+              updatedAt: mork.list[i - 1].setDate,
               editable: false
             })
           }

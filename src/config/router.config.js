@@ -107,19 +107,19 @@ export const asyncRouterMap = [
             path: '/list/table',
             name: 'Table',
             component: () => import('@/views/list/search/Search'),
-            redirect: '/list/table/article',
+            redirect: '/list/table/Workday',
             meta: { title: '考勤报表', keepAlive: true, permission: [ 'table' ] },
             children: [
               {
-                path: '/list/table/article',
-                name: 'SearchArticles',
+                path: '/list/table/Workday',
+                name: 'Workday',
                 component: () => import('@/views/kaoqin/kaoqinribao'),
                 meta: { title: '考勤日报', permission: [ 'table' ] }
               },
               {
-                path: '/list/table/project',
-                name: 'SearchProjects',
-                component: () => import('@/views/kaoqin/Permission'),
+                path: '/list/table/Workmonth',
+                name: 'Workmonth',
+                component: () => import('@/views/kaoqin/kaoqinyuebao'),
                 meta: { title: '考勤月报', permission: [ 'table' ] }
               }
             ]

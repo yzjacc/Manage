@@ -3,23 +3,29 @@
     <div class="table-page-search-wrapper">
       <a-form layout="inline">
         <a-row :gutter="48">
-          <a-col :md="7" :sm="24">
+          <a-col :md="6" :sm="24">
             <a-form-item label="时间">
-              <a-date-picker v-model="queryParam.date" style="width: 100%" placeholder="请输入更新日期"/>
+              <a-date-picker v-model="queryParam.curDate" style="width: 100%" placeholder="请输入更新日期"/>
             </a-form-item>
           </a-col>
-          <a-col :md="8" :sm="24">
-            <a-form-item label="姓名/编号/手机号">
-              <a-input v-model="queryParam.manage" placeholder="姓名/编号/手机号"/>
+          <a-col :md="5" :sm="24">
+            <a-form-item label="姓名">
+              <a-input v-model="queryParam.labourName" placeholder="姓名"/>
+            </a-form-item>
+          </a-col>
+          <a-col :md="5" :sm="24">
+            <a-form-item label="编号">
+              <a-input v-model="queryParam.labourId" placeholder="编号"/>
+            </a-form-item>
+          </a-col>
+          <a-col :md="6" :sm="24">
+            <a-form-item label="手机号">
+              <a-input v-model="queryParam.telephone" placeholder="手机号"/>
             </a-form-item>
           </a-col>
           <a-col :md="6" :sm="24">
             <a-form-item label="人员状态">
-              <a-select v-model="queryParam.useStatus" placeholder="请选择" default-value="0">
-                <a-select-option value="0">全部</a-select-option>
-                <a-select-option value="1">关闭</a-select-option>
-                <a-select-option value="2">运行中</a-select-option>
-              </a-select>
+              <a-input v-model="queryParam.labourStatus" placeholder="状态"/>
             </a-form-item>
           </a-col>
           <a-col :md="3" :sm="24">
@@ -27,7 +33,7 @@
               class="table-page-search-submitButtons"
               :style="{ float: 'right', overflow: 'hidden' } || {} "
             >
-              <a-button type="primary">查询</a-button>
+              <a-button type="primary" @click="$refs.table.refresh(true, {queryParam})">查询</a-button>
             </span>
           </a-col>
         </a-row>
@@ -38,6 +44,7 @@
       size="default"
       :columns="columns"
       :data="loadData"
+      :search="search"
       :alert="{ show: true, clear: true }"
       :rowSelection="{ selectedRowKeys: this.selectedRowKeys, onChange: this.onSelectChange }"
     >
@@ -100,38 +107,38 @@ export default {
         {
           title: '编号',
           width: '150px',
-          dataIndex: 'description',
-          scopedSlots: { customRender: 'description' }
+          dataIndex: 'id',
+          scopedSlots: { customRender: 'id' }
         },
         {
           title: '手机号',
           width: '150px',
-          dataIndex: 'description',
-          scopedSlots: { customRender: 'description' }
+          dataIndex: 'tel',
+          scopedSlots: { customRender: 'tel' }
         },
         {
           title: '日期',
           width: '150px',
-          dataIndex: 'description',
-          scopedSlots: { customRender: 'description' }
+          dataIndex: 'curDate',
+          scopedSlots: { customRender: 'curDate' }
         },
         {
           title: '进场体温',
           width: '150px',
-          dataIndex: 'description',
-          scopedSlots: { customRender: 'description' }
+          dataIndex: 'inTemperature',
+          scopedSlots: { customRender: 'inTemperature' }
         },
         {
           title: '出场体温',
           width: '150px',
-          dataIndex: 'description',
-          scopedSlots: { customRender: 'description' }
+          dataIndex: 'outTemperature',
+          scopedSlots: { customRender: 'outTemperature' }
         },
         {
           title: '人员状态',
           width: '150px',
-          dataIndex: 'description',
-          scopedSlots: { customRender: 'description' }
+          dataIndex: 'labourStatus',
+          scopedSlots: { customRender: 'labourStatus' }
         }
       ],
       // 加载数据方法 必须为 Promise 对象
@@ -139,7 +146,7 @@ export default {
         console.log('loadData.parameter', parameter)
         return axios({
           method: 'get',
-          url: `/labour/listLabourAll/0?pageSize=10`
+          url: `/labourTemperature/allLabours?pageNum=${parameter.pageNum}&pageSize=10`
         }).then(mork => {
           const totalCount = mork.total
           const parameters = {
@@ -150,23 +157,67 @@ export default {
           const pageNo = parseInt(parameters.pageNo)
           const pageSize = parseInt(parameters.pageSize)
           const totalPage = Math.ceil(totalCount / pageSize)
-          const key = (pageNo - 1) * pageSize
+          // const key = (pageNo - 1) * pageSize
           const next = (pageNo >= totalPage ? (totalCount % pageSize) : pageSize) + 1
           for (let i = 1; i < next; i++) {
-            const tmpKey = key + i
+            // const tmpKey = key + i
             result.push({
-              key: tmpKey,
-              id: mork.list[i - 1].labourNum,
-              name: mork.list[i - 1].labourName,
-              telenumber: mork.list[i - 1].telephone,
-              sorts: mork.list[i - 1].personnelType,
-              startTime: mork.list[i - 1].startTime,
-              date: mork.list[i - 1].personnelType,
-              idcard: mork.list[i - 1].cardNum,
-              money: mork.list[i - 1].salary,
-              salary: mork.list[i - 1].state,
-              timenum: mork.list[i - 1].workTime,
-              updatetime: mork.list[i - 1].workTime.gmtModified,
+              no: mork.list[i - 1].labourName,
+              id: mork.list[i - 1].labourId,
+              tel: mork.list[i - 1].telephone,
+              curDate: mork.list[i - 1].curDate,
+              inTemperature: mork.list[i - 1].inTemperature,
+              outTemperature: mork.list[i - 1].outTemperature,
+              labourStatus: mork.list[i - 1].labourStatus,
+              editable: false
+            })
+          }
+          return builder({
+            pageSize: pageSize,
+            pageNo: pageNo,
+            totalCount: totalCount,
+            totalPage: totalPage,
+            data: result
+          })
+        })
+      },
+      search: parameter => {
+        parameter = {
+          ...(parameter.queryParam),
+          pageNum: parameter.pageNum,
+          pageSize: 10
+        }
+        parameter.curDate = parameter.curDate !== null ? parameter.curDate._d.getFullYear() + '-' + (1 + parameter.curDate._d.getMonth()) + '-' + parameter.curDate._d.getDate() : undefined
+        console.log('search.parameter', parameter)
+        for (const key in parameter) {
+          if (parameter[key] === '' || parameter[key] === undefined) delete parameter[key]
+        }
+        return axios({
+          method: 'get',
+          url: `/labourTemperature/allLabours`,
+          data: parameter
+        }).then(mork => {
+          const totalCount = mork.total
+          const parameters = {
+            pageNo: mork.pageNum,
+            pageSize: mork.pageSize
+          }
+          const result = []
+          const pageNo = parseInt(parameters.pageNo)
+          const pageSize = parseInt(parameters.pageSize)
+          const totalPage = Math.ceil(totalCount / pageSize)
+          // const key = (pageNo - 1) * pageSize
+          const next = (pageNo >= totalPage ? (totalCount % pageSize) : pageSize) + 1
+          for (let i = 1; i < next; i++) {
+            // const tmpKey = key + i
+            result.push({
+              no: mork.list[i - 1].labourName,
+              id: mork.list[i - 1].labourId,
+              tel: mork.list[i - 1].telephone,
+              curDate: mork.list[i - 1].curDate,
+              inTemperature: mork.list[i - 1].inTemperature,
+              outTemperature: mork.list[i - 1].outTemperature,
+              labourStatus: mork.list[i - 1].labourStatus,
               editable: false
             })
           }

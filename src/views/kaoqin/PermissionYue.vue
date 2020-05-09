@@ -10,23 +10,18 @@
           </a-col>
           <a-col :md="8" :sm="24">
             <a-form-item label="姓名">
-              <a-input placeholder="请输入"/>
+              <a-input placeholder="请输入" v-model="queryParam.name"/>
             </a-form-item>
           </a-col>
           <a-col :md="8" :sm="24">
             <!-- 数据在tableList组件 -->
             <a-form-item label="开始时间">
-              <a-date-picker v-model="queryParam.date" style="width: 100%" placeholder="请输入更新日期"/>
+              <a-date-picker v-model="queryParam.passTime" style="width: 100%" placeholder="请输入更新日期"/>
             </a-form-item>
           </a-col>
           <a-col :md="8" :sm="24">
-            <a-form-item label="结束时间">
-              <a-date-picker v-model="queryParam.date" style="width: 100%" placeholder="请输入更新日期"/>
-            </a-form-item>
-          </a-col>
-          <a-col :md="8" :sm="24">
-            <a-form-item label="状态">
-              <a-select placeholder="请选择" default-value="0">
+            <a-form-item label="状态" >
+              <a-select placeholder="请选择" default-value="0" v-model="queryParam.status">
                 <a-select-option value="0">全部</a-select-option>
                 <a-select-option value="1">关闭</a-select-option>
                 <a-select-option value="2">运行中</a-select-option>
@@ -35,8 +30,8 @@
           </a-col>
           <a-col :md="8" :sm="24">
             <span class="table-page-search-submitButtons">
-              <a-button type="primary">查询</a-button>
-              <a-button style="margin-left: 8px">重置</a-button>
+              <a-button type="primary" @click="$refs.table.refresh(true, {queryParam})" >查询</a-button>
+              <a-button style="margin-left: 8px" @click="() => queryParam = {}">重置</a-button>
             </span>
           </a-col>
         </a-row>
@@ -77,7 +72,9 @@
 
     <a-modal
       title="操作"
+      ref="table"
       :width="800"
+      :search="search"
       v-model="visible"
       @ok="handleOk"
     >
@@ -150,8 +147,6 @@ export default {
   },
   data () {
     return {
-      description: '列表使用场景：后台管理中的权限管理以及角色管理，可用于基于 RBAC 设计的角色权限控制，颗粒度细到每一个操作类型。',
-
       visible: false,
       labelCol: {
         xs: { span: 24 },
@@ -163,7 +158,6 @@ export default {
       },
       form: null,
       mdl: {},
-
       // 高级搜索 展开/关闭
       advanced: false,
       // 查询参数
@@ -199,7 +193,7 @@ export default {
         console.log('loadData.parameter', parameter)
         return axios({
           method: 'get',
-          url: `attendanceRecord/getAttendanceRecordsByMonth?projectId=1&pageSize=10`
+          url: `attendanceRecord/getAttendanceRecordsByConditions?projectId=1&pageNum=${parameter.pageNum}&pageSize=10`
         }).then(mork => {
           const totalCount = mork.total
           const parameters = {
@@ -229,7 +223,48 @@ export default {
           })
         })
       },
-
+      search: parameter => {
+        parameter = {
+          ...(parameter.queryParam),
+          pageNum: parameter.pageNum,
+          pageSize: 10
+        }
+        for (const key in parameter) {
+          if (parameter[key] === '' || parameter[key] === undefined) delete parameter[key]
+        }
+        return axios({
+          method: 'get',
+          url: `attendanceRecord/getAttendanceRecordsByConditions`,
+          data: parameter
+        }).then(mork => {
+          const totalCount = mork.total
+          const parameters = {
+            pageNo: mork.pageNum,
+            pageSize: mork.pageSize
+          }
+          const result = []
+          const pageNo = parseInt(parameters.pageNo)
+          const pageSize = parseInt(parameters.pageSize)
+          const totalPage = Math.ceil(totalCount / pageSize)
+          // const key = (pageNo - 1) * pageSize
+          // const next = (pageNo >= totalPage ? (totalCount % pageSize) : pageSize) + 1
+          for (let i = 1; i <= mork.size; i++) {
+            // const tmpKey = key + i
+            result.push({
+              date: mork.list[i - 1].passTime,
+              name: mork.list[i - 1].name,
+              status: mork.list[i - 1].status
+            })
+          }
+          return builder({
+            pageSize: pageSize,
+            pageNo: pageNo,
+            totalCount: totalCount,
+            totalPage: totalPage,
+            data: result
+          })
+        })
+      },
       selectedRowKeys: [],
       selectedRows: []
     }

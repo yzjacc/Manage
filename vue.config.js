@@ -86,7 +86,7 @@ const vueConfig = {
 
   devServer: {
     // development server port 8000
-    host: '192.168.0.104',
+    host: 'localhost',
     port: 8080, // 端口号
     https: false, // https:{type:Boolean}
     open: true,

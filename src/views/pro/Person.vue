@@ -150,7 +150,7 @@ export default {
           for (let i = 1; i <= mork.size; i++) {
             // const tmpKey = key + i
             if (mork.list[i - 1].proPersonnel !== null) {
-              // var date = new Date(mork.list[i - 1].proPersonnel.gmtModified)
+              var date = new Date(mork.list[i - 1].gmtCreate)
               result.push({
                 // key: tmpKey,
                 personnelId: mork.list[i - 1].personnelId === undefined ? '' : mork.list[i - 1].personnelId,
@@ -158,7 +158,7 @@ export default {
                 no: mork.list[i - 1].post === undefined ? '' : mork.list[i - 1].post,
                 contact: mork.list[i - 1].telephone === undefined ? '' : mork.list[i - 1].telephone,
                 password: mork.list[i - 1].password === undefined ? '' : mork.list[i - 1].password,
-                updatedAt: mork.list[i - 1].gmtModified === undefined ? '' : mork.list[i - 1].gmtModified,
+                updatedAt: mork.list[i - 1].gmtModified === undefined ? '' : date.getFullYear() + '-' + date.getMonth() + '-' + date.getDate(),
                 gmtCreate: mork.list[i - 1].gmtCreate === undefined ? '' : mork.list[i - 1].gmtCreate,
                 // updatedAt: date.getFullYear() + '-' + date.getMonth() + '-' + date.getDate(),
                 editable: false
@@ -273,7 +273,7 @@ export default {
         post: row.no,
         telephone: row.contact,
         password: row.password,
-        gmtModified: new Date(row.updatedAt).getFullYear() + '-' + (new Date(row.updatedAt).getMonth() + 1) + '-' + new Date(row.updatedAt).getDate(),
+        gmtModified: row.gmtModified,
         gmtCreate: new Date(row.gmtCreate).getFullYear() + '-' + (new Date(row.gmtCreate).getMonth() + 1) + '-' + new Date(row.gmtCreate).getDate()
       }
       console.log('row', row)
