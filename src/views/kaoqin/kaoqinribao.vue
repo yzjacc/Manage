@@ -57,7 +57,7 @@
 
     <s-table
       ref="table"
-      size="default"
+      size="small"
       :columns="columns"
       :data="loadData"
       :alert="{ show: true, clear: true }"
@@ -147,43 +147,36 @@ export default {
         {
           title: '工作时长',
           dataIndex: 'updatedAt',
-          width: '130px',
           scopedSlots: { customRender: 'updatedAt' }
         },
         {
           title: '迟到次数',
           dataIndex: 'action',
-          width: '150px',
           scopedSlots: { customRender: 'action' }
         },
         {
           title: '迟到时长',
           dataIndex: 'action',
-          width: '150px',
           scopedSlots: { customRender: 'action' }
         },
         {
           title: '早退次数',
           dataIndex: 'action',
-          width: '150px',
           scopedSlots: { customRender: 'action' }
         },
         {
           title: '早退时长',
           dataIndex: 'action',
-          width: '150px',
           scopedSlots: { customRender: 'action' }
         },
         {
           title: '缺卡次数',
           dataIndex: 'action',
-          width: '150px',
           scopedSlots: { customRender: 'action' }
         },
         {
           title: '未出勤天数',
           dataIndex: 'action',
-          width: '150px',
           scopedSlots: { customRender: 'action' }
         }
       ],
@@ -192,7 +185,7 @@ export default {
         console.log('loadData.parameter', parameter)
         return axios({
           method: 'get',
-          url: `/labour/proInformation/allProInformations?pageNum=${parameter.pageNum - 1}&pageSize=10`
+          url: `attendanceReport/getAttendanceRecordsByConditions?pageNum=${parameter.pageNum}&pageSize=10&pageSize=10`
         }).then(mork => {
           const totalCount = mork.total
           const parameters = {

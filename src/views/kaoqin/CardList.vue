@@ -180,42 +180,49 @@ export default {
       columns: [
         {
           title: '姓名',
-          dataIndex: 'name'
+          dataIndex: 'labourName',
+          scopedSlots: { customRender: 'labourName' }
+
         },
         {
           title: '劳工编号',
-          dataIndex: 'id'
+          dataIndex: 'labourNum',
+          scopedSlots: { customRender: 'labourNum' }
         },
         {
           title: '进场/出场',
-          dataIndex: 'id'
+          dataIndex: 'replenishType',
+          scopedSlots: { customRender: 'replenishType' }
         },
         {
           title: '工种',
-          dataIndex: 'id'
+          dataIndex: 'post',
+          scopedSlots: { customRender: 'post' }
         },
         {
           title: '补卡类型',
-          dataIndex: 'id'
+          dataIndex: 'remark',
+          scopedSlots: { customRender: 'remark' }
         },
         {
           title: '补打卡时间',
-          dataIndex: 'id'
+          dataIndex: 'replenishTime',
+          scopedSlots: { customRender: 'replenishTime' }
         },
         {
           title: '补卡负责人',
-          dataIndex: 'status',
-          scopedSlots: { customRender: 'status' }
+          dataIndex: 'memberName',
+          scopedSlots: { customRender: 'memberName' }
         },
         {
           title: '创建时间',
-          dataIndex: 'status',
-          scopedSlots: { customRender: 'status' }
+          dataIndex: 'createTime',
+          scopedSlots: { customRender: 'createTime' }
         },
         {
           title: '备注',
-          dataIndex: 'status',
-          scopedSlots: { customRender: 'status' }
+          dataIndex: 'replenishReason',
+          scopedSlots: { customRender: 'replenishReason' }
         }
         // {
         //   title: '操作',
@@ -231,7 +238,7 @@ export default {
         console.log('loadData.parameter', parameter)
         return axios({
           method: 'get',
-          url: `/labour/listLabourAll/0?pageSize=10`
+          url: `/attendanceReplenish/getAttendanceReplenishByConditions`
         }).then(mork => {
           const totalCount = mork.total
           const parameters = {
@@ -242,24 +249,20 @@ export default {
           const pageNo = parseInt(parameters.pageNo)
           const pageSize = parseInt(parameters.pageSize)
           const totalPage = Math.ceil(totalCount / pageSize)
-          const key = (pageNo - 1) * pageSize
+          // const key = (pageNo - 1) * pageSize
           const next = (pageNo >= totalPage ? (totalCount % pageSize) : pageSize) + 1
           for (let i = 1; i < next; i++) {
-            const tmpKey = key + i
+            // const tmpKey = key + i
             result.push({
-              key: tmpKey,
-              id: mork.list[i - 1].labourNum,
-              name: mork.list[i - 1].labourName,
-              telenumber: mork.list[i - 1].telephone,
-              sorts: mork.list[i - 1].personnelType,
-              startTime: mork.list[i - 1].startTime,
-              date: mork.list[i - 1].personnelType,
-              idcard: mork.list[i - 1].cardNum,
-              money: mork.list[i - 1].salary,
-              salary: mork.list[i - 1].state,
-              timenum: mork.list[i - 1].workTime,
-              updatetime: mork.list[i - 1].workTime.gmtModified,
-              editable: false
+              labourName: mork.list[i - 1].labInformation.labourName,
+              labourNum: mork.list[i - 1].labInformation.labourNum,
+              replenishType: mork.list[i - 1].replenishType,
+              memberName: mork.list[i - 1].proPersonnel.memberName,
+              replenishReason: mork.list[i - 1].replenishReason,
+              remark: mork.list[i - 1].remark,
+              createTime: mork.list[i - 1].createTime,
+              post: mork.list[i - 1].labInformation.post,
+              replenishTime: mork.list[i - 1].replenishTime
             })
           }
           return builder({

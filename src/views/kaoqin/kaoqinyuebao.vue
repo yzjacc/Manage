@@ -57,7 +57,7 @@
 
     <s-table
       ref="table"
-      size="default"
+      size="small"
       :columns="columns"
       :data="loadData"
       :alert="{ show: true, clear: true }"
@@ -115,45 +115,68 @@ export default {
       // 表头
       columns: [
         {
-          title: '项目编号',
+          title: '编号',
           dataIndex: 'id',
           scopedSlots: { customRender: 'id' }
         },
         {
-          title: '项目名称',
+          title: '姓名',
           dataIndex: 'description',
           scopedSlots: { customRender: 'description' }
         },
         {
-          title: '项目管理员',
+          title: '职位',
           dataIndex: 'manager',
           scopedSlots: { customRender: 'manager' }
         },
         {
-          title: '联系方式',
+          title: '日期',
           dataIndex: 'tel',
           scopedSlots: { customRender: 'tel' }
         },
         {
-          title: '项目状态',
+          title: '1 状态',
           dataIndex: 'status',
           scopedSlots: { customRender: 'status' }
         },
         {
-          title: '劳工数',
+          title: '2 状态',
           dataIndex: 'number',
           scopedSlots: { customRender: 'number' }
         },
         {
-          title: '创建时间',
+          title: '工作时长',
           dataIndex: 'updatedAt',
-          width: '130px',
           scopedSlots: { customRender: 'updatedAt' }
         },
         {
-          title: '操作',
+          title: '迟到次数',
           dataIndex: 'action',
-          width: '150px',
+          scopedSlots: { customRender: 'action' }
+        },
+        {
+          title: '迟到时长',
+          dataIndex: 'action',
+          scopedSlots: { customRender: 'action' }
+        },
+        {
+          title: '早退次数',
+          dataIndex: 'action',
+          scopedSlots: { customRender: 'action' }
+        },
+        {
+          title: '早退时长',
+          dataIndex: 'action',
+          scopedSlots: { customRender: 'action' }
+        },
+        {
+          title: '缺卡次数',
+          dataIndex: 'action',
+          scopedSlots: { customRender: 'action' }
+        },
+        {
+          title: '未出勤天数',
+          dataIndex: 'action',
           scopedSlots: { customRender: 'action' }
         }
       ],

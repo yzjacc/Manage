@@ -23,8 +23,8 @@
             <a-form-item label="状态" >
               <a-select placeholder="请选择" default-value="0" v-model="queryParam.status">
                 <a-select-option value="0">全部</a-select-option>
-                <a-select-option value="1">关闭</a-select-option>
-                <a-select-option value="2">运行中</a-select-option>
+                <a-select-option value="正常">正常</a-select-option>
+                <a-select-option value="不正常">不正常</a-select-option>
               </a-select>
             </a-form-item>
           </a-col>
@@ -38,7 +38,7 @@
       </a-form>
     </div>
 
-    <s-table :columns="columns" :data="loadData">
+    <s-table ref="table" :columns="columns" :search="search" :data="loadData">
 
       <span slot="actions" slot-scope="text, record">
         <a-tag v-for="(action, index) in record.actionList" :key="index">{{ action.describe }}</a-tag>
@@ -72,7 +72,6 @@
 
     <a-modal
       title="操作"
-      ref="table"
       :width="800"
       :search="search"
       v-model="visible"
@@ -193,7 +192,7 @@ export default {
         console.log('loadData.parameter', parameter)
         return axios({
           method: 'get',
-          url: `attendanceRecord/getAttendanceRecordsByConditions?projectId=1&pageNum=${parameter.pageNum}&pageSize=10`
+          url: `/attendanceRecord/getAttendanceRecordsByConditions?projectId=1&pageNum=${parameter.pageNum}&pageSize=10`
         }).then(mork => {
           const totalCount = mork.total
           const parameters = {
@@ -208,10 +207,11 @@ export default {
           // const next = (pageNo >= totalPage ? (totalCount % pageSize) : pageSize) + 1
           for (let i = 1; i <= mork.size; i++) {
             // const tmpKey = key + i
+            var date = new Date(mork.list[i - 1].passTime)
             result.push({
-              date: mork.list[i - 1].passTime,
               name: mork.list[i - 1].name,
-              status: mork.list[i - 1].status
+              status: mork.list[i - 1].status,
+              date: date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
             })
           }
           return builder({
@@ -229,12 +229,14 @@ export default {
           pageNum: parameter.pageNum,
           pageSize: 10
         }
+        if (parameter['status'] === '0') delete parameter['status']
         for (const key in parameter) {
           if (parameter[key] === '' || parameter[key] === undefined) delete parameter[key]
         }
+        console.log(parameter, 'ddddd')
         return axios({
           method: 'get',
-          url: `attendanceRecord/getAttendanceRecordsByConditions`,
+          url: `/attendanceRecord/getAttendanceRecordsByConditions`,
           data: parameter
         }).then(mork => {
           const totalCount = mork.total
@@ -250,10 +252,11 @@ export default {
           // const next = (pageNo >= totalPage ? (totalCount % pageSize) : pageSize) + 1
           for (let i = 1; i <= mork.size; i++) {
             // const tmpKey = key + i
+            var date = new Date(mork.list[i - 1].passTime)
             result.push({
-              date: mork.list[i - 1].passTime,
               name: mork.list[i - 1].name,
-              status: mork.list[i - 1].status
+              status: mork.list[i - 1].status,
+              date: date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
             })
           }
           return builder({
